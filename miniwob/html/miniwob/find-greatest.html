@@ -76,7 +76,7 @@ var genProblem = function() {
     if(d3.selectAll('.card.hidden')[0].length === 3) {core.endEpisode(-1.0, false); return;}
     var userIndex = d3.select('.card:not(.hidden)')[0][0].getAttribute('data-index');
     if(userIndex === expectedIndex.toString()) core.endEpisode(1.0, true);
-    else core.endEpisode(0.1, true);
+    else core.endEpisode(0.0, false);
   });
 }
 
