@@ -40,4 +40,4 @@ sudo apt install chromium-driver
 ## Development Environment
 
 For information about setting up a development environment,
-see [`CONTRIBUTING.md`](https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/CONTRIBUTING.md).
+see [`CONTRIBUTING.md`](https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/CONTRIBUTING.md).

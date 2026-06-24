@@ -12,9 +12,9 @@ The following tutorial illustrates how to create a custom environment with the s
 ```
 
 To properly interface with the MiniWoB++ library, the HTML file must include
-[`core.css`](https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/miniwob/html/core/core.css)
+[`core.css`](https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/miniwob/html/core/core.css)
 and
-[`core.js`](https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/miniwob/html/core/core.js).
+[`core.js`](https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/miniwob/html/core/core.js).
 These files are also available from the Python package (under `html/core/`).
 
 Here is an example HTML file (`custom.html`):

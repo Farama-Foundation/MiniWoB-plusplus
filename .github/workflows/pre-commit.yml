@@ -5,7 +5,7 @@ name: pre-commit
 on:
   pull_request:
   push:
-    branches: [master]
+    branches: [main]
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -14,8 +14,8 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
       - run: pip install pre-commit

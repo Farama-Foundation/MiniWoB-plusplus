@@ -69,7 +69,7 @@ html_theme_options = {
     "description": "A collection of over 100 web interaction environments, along with JavaScript and Python interfaces.",
     "image": "img/miniwobplusplus-github.png",
     "source_repository": "https://github.com/Farama-Foundation/miniwob-plusplus/",
-    "source_branch": "master",
+    "source_branch": "main",
     "source_directory": "docs/",
     "versioning": True,
     "gtag": "G-PR9ZPS99C2",
