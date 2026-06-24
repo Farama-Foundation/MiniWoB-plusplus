@@ -11,7 +11,7 @@ from utils import get_all_registered_miniwob_envs, trim_docstring
 LAYOUT = "env"
 
 gym.register_envs(miniwob)
-gym.logger.set_level(gym.logger.DISABLED)
+gym.logger.min_level = 100
 
 
 # Copy MiniWoB-plusplus/miniwob/html to /docs/demos/

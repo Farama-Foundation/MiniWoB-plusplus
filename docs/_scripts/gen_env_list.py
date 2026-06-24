@@ -9,7 +9,7 @@ from utils import extract_description_from_docstring, get_all_registered_miniwob
 
 
 gym.register_envs(miniwob)
-gym.logger.set_level(gym.logger.DISABLED)
+gym.logger.min_level = 100
 
 ENV_TYPES = [
     {
