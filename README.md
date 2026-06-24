@@ -2,11 +2,11 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Farama-Foundation/miniwob-plusplus/master/miniwobplusplus-text.png" width="500px"/>
+  <img src="https://raw.githubusercontent.com/Farama-Foundation/miniwob-plusplus/main/miniwobplusplus-text.png" width="500px"/>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Farama-Foundation/miniwob-plusplus/master/docs/_static/img/showcase-static.png" width="100%"/>
+  <img src="https://raw.githubusercontent.com/Farama-Foundation/miniwob-plusplus/main/docs/_static/img/showcase-static.png" width="100%"/>
 </p>
 
 The MiniWoB++ (Mini World of Bits++) library contains a collection of over 100 **web interaction environments**,

@@ -76,5 +76,5 @@ content/demonstrations
 :caption: Development
 
 Github <https://github.com/Farama-Foundation/miniwob-plusplus>
-Contribute to the Docs <https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/docs/README.md>
+Contribute to the Docs <https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/docs/README.md>
 ```
