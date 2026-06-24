@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Observation Space" href="../observation_space/" /><link rel="prev" title="Getting Started" href="../getting_started/" />
         <link rel="canonical" href="https://miniwob.farama.org/content/basic_usage.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Basic Usage - MiniWoB++ Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=5b1a364e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -362,7 +362,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/docs/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -388,7 +388,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/miniwob-plusplus/edit/master/docs/content/basic_usage.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/miniwob-plusplus/edit/main/docs/content/basic_usage.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -420,15 +420,15 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="basic-usage">
-<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h1>
+<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading">¶</a></h1>
 <section id="simple-example">
-<h2>Simple Example<a class="headerlink" href="#simple-example" title="Link to this heading">#</a></h2>
+<h2>Simple Example<a class="headerlink" href="#simple-example" title="Link to this heading">¶</a></h2>
 <p>The following code performs a deterministic action on the
 <a class="reference internal" href="../../environments/click-test-2/"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">click-test-2</span></code></span></a> environment.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">gymnasium</span>
-<span class="kn">import</span> <span class="nn">miniwob</span>
-<span class="kn">from</span> <span class="nn">miniwob.action</span> <span class="kn">import</span> <span class="n">ActionTypes</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">miniwob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">miniwob.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionTypes</span>
 
 <span class="n">gymnasium</span><span class="o">.</span><span class="n">register_envs</span><span class="p">(</span><span class="n">miniwob</span><span class="p">)</span>
 
@@ -461,12 +461,14 @@
 </pre></div>
 </div>
 <p>The output should look something like this:</p>
-<a class="reference internal image-reference" href="../../_images/example-usage-1.png"><img alt="../../_images/example-usage-1.png" class="align-center" src="../../_images/example-usage-1.png" style="width: 50%;" /></a>
+<a class="reference internal image-reference" href="../../_images/example-usage-1.png"><img alt="../../_images/example-usage-1.png" class="align-center" src="../../_images/example-usage-1.png" style="width: 50%;" />
+</a>
 <p>After 2 seconds:</p>
-<a class="reference internal image-reference" href="../../_images/example-usage-2.png"><img alt="../../_images/example-usage-2.png" class="align-center" src="../../_images/example-usage-2.png" style="width: 50%;" /></a>
+<a class="reference internal image-reference" href="../../_images/example-usage-2.png"><img alt="../../_images/example-usage-2.png" class="align-center" src="../../_images/example-usage-2.png" style="width: 50%;" />
+</a>
 </section>
 <section id="environment-initialization">
-<h2>Environment Initialization<a class="headerlink" href="#environment-initialization" title="Link to this heading">#</a></h2>
+<h2>Environment Initialization<a class="headerlink" href="#environment-initialization" title="Link to this heading">¶</a></h2>
 <p>An environment can be created using
 <a class="reference external" href="https://gymnasium.farama.org/api/registry/#gymnasium.make"><code class="docutils literal notranslate"><span class="pre">gymnasium.make</span></code></a>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;miniwob/click-test-2-v1&#39;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;human&#39;</span><span class="p">)</span>
@@ -490,7 +492,7 @@ Supported values are:</p>
 </ul>
 </section>
 <section id="observation-space">
-<h2>Observation Space<a class="headerlink" href="#observation-space" title="Link to this heading">#</a></h2>
+<h2>Observation Space<a class="headerlink" href="#observation-space" title="Link to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">observation</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 </pre></div>
@@ -522,7 +524,7 @@ return an observation, which is a <code class="docutils literal notranslate"><sp
 <p>See the <a class="reference internal" href="../observation_space/"><span class="doc std std-doc">Observation Space</span></a> page for more details.</p>
 </section>
 <section id="action-space">
-<h2>Action Space<a class="headerlink" href="#action-space" title="Link to this heading">#</a></h2>
+<h2>Action Space<a class="headerlink" href="#action-space" title="Link to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">create_action</span><span class="p">(</span><span class="n">ActionTypes</span><span class="o">.</span><span class="n">CLICK_ELEMENT</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">element</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">])</span>
 <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 </pre></div>
@@ -708,7 +710,7 @@ The action space <code class="docutils literal notranslate"><span class="pre">en
       </script>
 
     <script src="../../_static/documentation_options.js?v=c8e69ae7"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
@@ -771,14 +773,6 @@ The action space <code class="docutils literal notranslate"><span class="pre">en
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -792,7 +786,14 @@ The action space <code class="docutils literal notranslate"><span class="pre">en
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -808,8 +809,6 @@ The action space <code class="docutils literal notranslate"><span class="pre">en
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -821,6 +820,13 @@ The action space <code class="docutils literal notranslate"><span class="pre">en
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -865,7 +871,14 @@ The action space <code class="docutils literal notranslate"><span class="pre">en
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

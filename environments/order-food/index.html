@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="phone-book" href="../phone-book/" /><link rel="prev" title="odd-or-even" href="../odd-or-even/" />
         <link rel="canonical" href="https://miniwob.farama.org/environments/order-food.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>order-food - MiniWoB++ Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=5b1a364e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -362,7 +362,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/docs/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -411,18 +411,18 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="order-food">
-<h1>order-food<a class="headerlink" href="#order-food" title="Link to this heading">#</a></h1>
+<h1>order-food<a class="headerlink" href="#order-food" title="Link to this heading">¶</a></h1>
 <center>
     <iframe src="../../demos/miniwob/order-food.html" width="325" height="210" scrolling="no" style="overflow:hidden;">
     </iframe><br>
     <a href="../../demos/miniwob/order-food.html" target="_blank"><button>Open demo in a separate tab.</button></a>
 </center>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>Order food items from a menu.</p>
 </section>
 <section id="example-utterances">
-<h2>Example utterances<a class="headerlink" href="#example-utterances" title="Link to this heading">#</a></h2>
+<h2>Example utterances<a class="headerlink" href="#example-utterances" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Order 3 items that are vegan</p></li>
 <li><p>Order one of each item: Coconut mango tart, Ice cream sundae</p></li>
@@ -432,7 +432,7 @@
 </ul>
 </section>
 <section id="utterance-fields">
-<h2>Utterance fields<a class="headerlink" href="#utterance-fields" title="Link to this heading">#</a></h2>
+<h2>Utterance fields<a class="headerlink" href="#utterance-fields" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>amount</p></li>
 <li><p>criterion</p></li>
@@ -603,7 +603,7 @@
       </script>
 
     <script src="../../_static/documentation_options.js?v=c8e69ae7"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
@@ -666,14 +666,6 @@
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -687,7 +679,14 @@
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -703,8 +702,6 @@
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -716,6 +713,13 @@
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -760,7 +764,14 @@
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

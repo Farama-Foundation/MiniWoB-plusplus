@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="draw-line" href="../draw-line/" /><link rel="prev" title="drag-sort-numbers" href="../drag-sort-numbers/" />
         <link rel="canonical" href="https://miniwob.farama.org/environments/draw-circle.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>draw-circle - MiniWoB++ Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=5b1a364e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -362,7 +362,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/docs/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -411,28 +411,28 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="draw-circle">
-<h1>draw-circle<a class="headerlink" href="#draw-circle" title="Link to this heading">#</a></h1>
+<h1>draw-circle<a class="headerlink" href="#draw-circle" title="Link to this heading">¶</a></h1>
 <center>
     <iframe src="../../demos/miniwob/draw-circle.html" width="325" height="210" scrolling="no" style="overflow:hidden;">
     </iframe><br>
     <a href="../../demos/miniwob/draw-circle.html" target="_blank"><button>Open demo in a separate tab.</button></a>
 </center>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Link to this heading">#</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>Draw a circle around a marked point.</p>
 </section>
 <section id="example-utterances">
-<h2>Example utterances<a class="headerlink" href="#example-utterances" title="Link to this heading">#</a></h2>
+<h2>Example utterances<a class="headerlink" href="#example-utterances" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Draw a circle centered around the marked point by dragging the mouse. Press submit when done.</p></li>
 </ul>
 </section>
 <section id="utterance-fields">
-<h2>Utterance fields<a class="headerlink" href="#utterance-fields" title="Link to this heading">#</a></h2>
+<h2>Utterance fields<a class="headerlink" href="#utterance-fields" title="Link to this heading">¶</a></h2>
 <p>(none)</p>
 </section>
 <section id="additional-notes">
-<h2>Additional notes<a class="headerlink" href="#additional-notes" title="Link to this heading">#</a></h2>
+<h2>Additional notes<a class="headerlink" href="#additional-notes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><strong>Partial reward:</strong> The reward is -0.25 if the shape is too small. Otherwise the reward is based on how big the shape is and how consistent the circle radius is.</p></li>
 </ul>
@@ -600,7 +600,7 @@
       </script>
 
     <script src="../../_static/documentation_options.js?v=c8e69ae7"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
@@ -663,14 +663,6 @@
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -684,7 +676,14 @@
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -700,8 +699,6 @@
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -713,6 +710,13 @@
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -757,7 +761,14 @@
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 

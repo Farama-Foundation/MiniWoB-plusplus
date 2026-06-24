@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Javascript API" href="../javascript_api/" /><link rel="prev" title="visual-addition" href="../../environments/visual-addition/" />
         <link rel="canonical" href="https://miniwob.farama.org/content/custom_environment.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
+    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Creating a Custom Environment - MiniWoB++ Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=5b1a364e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -362,7 +362,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus">Github</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/docs/README.md">Contribute to the Docs</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/docs/README.md">Contribute to the Docs</a></li>
 </ul>
 
 </div>
@@ -388,7 +388,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/miniwob-plusplus/edit/master/docs/content/custom_environment.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/miniwob-plusplus/edit/main/docs/content/custom_environment.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -420,16 +420,17 @@
           <article role="main">
             
             <section class="tex2jax_ignore mathjax_ignore" id="creating-a-custom-environment">
-<h1>Creating a Custom Environment<a class="headerlink" href="#creating-a-custom-environment" title="Link to this heading">#</a></h1>
+<h1>Creating a Custom Environment<a class="headerlink" href="#creating-a-custom-environment" title="Link to this heading">¶</a></h1>
 <p>Creating a custom MiniWoB++ environment is as simple as creating a new task HTML page, and then specifying the URL to the HTML file when registering the environment.</p>
 <p>The following tutorial illustrates how to create a custom environment with the standard <a class="reference internal" href="../observation_space/"><span class="doc std std-doc">observation space</span></a> and <a class="reference internal" href="../action_space/"><span class="doc std std-doc">action space</span></a>. For more advanced needs (customizing the spaces, creating a package, etc.), see this <a class="reference external" href="https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/">Gymnasium tutorial</a>.</p>
 <section id="creating-the-task-html-page">
-<h2>Creating the Task HTML Page<a class="headerlink" href="#creating-the-task-html-page" title="Link to this heading">#</a></h2>
-<a class="reference internal image-reference" href="../../_images/custom-environment-1.png"><img alt="../../_images/custom-environment-1.png" class="align-center" src="../../_images/custom-environment-1.png" style="width: 50%;" /></a>
+<h2>Creating the Task HTML Page<a class="headerlink" href="#creating-the-task-html-page" title="Link to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="../../_images/custom-environment-1.png"><img alt="../../_images/custom-environment-1.png" class="align-center" src="../../_images/custom-environment-1.png" style="width: 50%;" />
+</a>
 <p>To properly interface with the MiniWoB++ library, the HTML file must include
-<a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/miniwob/html/core/core.css"><code class="docutils literal notranslate"><span class="pre">core.css</span></code></a>
+<a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/miniwob/html/core/core.css"><code class="docutils literal notranslate"><span class="pre">core.css</span></code></a>
 and
-<a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/master/miniwob/html/core/core.js"><code class="docutils literal notranslate"><span class="pre">core.js</span></code></a>.
+<a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/blob/main/miniwob/html/core/core.js"><code class="docutils literal notranslate"><span class="pre">core.js</span></code></a>.
 These files are also available from the Python package (under <code class="docutils literal notranslate"><span class="pre">html/core/</span></code>).</p>
 <p>Here is an example HTML file (<code class="docutils literal notranslate"><span class="pre">custom.html</span></code>):</p>
 <div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
@@ -494,7 +495,7 @@ These files are also available from the Python package (under <code class="docut
 </div>
 </section>
 <section id="registering-the-environment">
-<h2>Registering the Environment<a class="headerlink" href="#registering-the-environment" title="Link to this heading">#</a></h2>
+<h2>Registering the Environment<a class="headerlink" href="#registering-the-environment" title="Link to this heading">¶</a></h2>
 <p>The generic environment class <code class="docutils literal notranslate"><span class="pre">MiniWoBEnvironment</span></code> from <code class="docutils literal notranslate"><span class="pre">miniwob.environment</span></code> can be used as the entry point for the environment.
 The following keyword arguments should be specified:</p>
 <ul class="simple">
@@ -503,9 +504,9 @@ The following keyword arguments should be specified:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">field_extractor</span></code>: This should be a function that takes the utterance string (that appears in the yellow box) and returns a list of fields as key-value tuples. One option is to not produce any field by specifying <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">x:</span> <span class="pre">[]</span></code>.</p></li>
 </ul>
 <p>Here is example code (<code class="docutils literal notranslate"><span class="pre">custom_registry.py</span></code>):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">from</span> <span class="nn">gymnasium.envs.registration</span> <span class="kn">import</span> <span class="n">register</span>
-<span class="kn">from</span> <span class="nn">miniwob.fields</span> <span class="kn">import</span> <span class="n">create_regex_field_extractor</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gymnasium.envs.registration</span><span class="w"> </span><span class="kn">import</span> <span class="n">register</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">miniwob.fields</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_regex_field_extractor</span>
 
 <span class="n">register</span><span class="p">(</span>
   <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;miniwob/custom-v0&#39;</span><span class="p">,</span>
@@ -525,15 +526,15 @@ The following keyword arguments should be specified:</p>
 </div>
 </section>
 <section id="using-the-environment">
-<h2>Using the Environment<a class="headerlink" href="#using-the-environment" title="Link to this heading">#</a></h2>
+<h2>Using the Environment<a class="headerlink" href="#using-the-environment" title="Link to this heading">¶</a></h2>
 <p>The following code is adapted from the example in the <a class="reference internal" href="../basic_usage/"><span class="doc std std-doc">Basic Usage</span></a> page:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">gymnasium</span>
-<span class="kn">from</span> <span class="nn">miniwob.action</span> <span class="kn">import</span> <span class="n">ActionTypes</span>
-<span class="kn">from</span> <span class="nn">miniwob.fields</span> <span class="kn">import</span> <span class="n">field_lookup</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">miniwob.action</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActionTypes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">miniwob.fields</span><span class="w"> </span><span class="kn">import</span> <span class="n">field_lookup</span>
 
 <span class="c1"># Import `custom_registry.py` above to register the task.</span>
-<span class="kn">import</span> <span class="nn">custom_registry</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">custom_registry</span>
 <span class="n">gymnasium</span><span class="o">.</span><span class="n">register_envs</span><span class="p">(</span><span class="n">custom_registry</span><span class="p">)</span>
 
 <span class="c1"># Create an environment.</span>
@@ -735,7 +736,7 @@ The following keyword arguments should be specified:</p>
       </script>
 
     <script src="../../_static/documentation_options.js?v=c8e69ae7"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
@@ -798,14 +799,6 @@ The following keyword arguments should be specified:</p>
         const jsonResponse = xhr.response;
         const sections = {
           "Core Projects": [],
-          "Mature Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          },
           "Foundation": [
             {
               name: "About",
@@ -819,7 +812,14 @@ The following keyword arguments should be specified:</p>
               name: "Donate",
               link: "https://farama.org/donations"
             }
-          ]
+          ],
+          "Mature Projects": {
+            "Documentation": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          }
         }
 
         // Categorize projects
@@ -835,8 +835,6 @@ The following keyword arguments should be specified:</p>
           } else if (projectJson.type == "mature") {
             if (projectJson.website !== null) {
               sections["Mature Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Mature Projects"]["Repositories"].push(projectJson)
             }
           } else {
             if (projectJson.website !== null) {
@@ -848,6 +846,13 @@ The following keyword arguments should be specified:</p>
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
+
+        const stackedColumnElem = Object.assign(
+          document.createElement('div'), {
+            style: 'display: flex; flex-direction: column;'
+          }
+        );
+        const stackedKeys = new Set(["Core Projects", "Foundation"]);
 
         Object.keys(sections).forEach((key, i) => {
           const sectionElem = Object.assign(
@@ -892,7 +897,14 @@ The following keyword arguments should be specified:</p>
             const ulElem = createProjectsList(projects, true);
             sectionElem.appendChild(ulElem);
           }
-          menuContainer.appendChild(sectionElem)
+          if (stackedKeys.has(key)) {
+            if (!stackedColumnElem.parentNode) {
+              menuContainer.appendChild(stackedColumnElem);
+            }
+            stackedColumnElem.appendChild(sectionElem);
+          } else {
+            menuContainer.appendChild(sectionElem);
+          }
         });
       }
 
