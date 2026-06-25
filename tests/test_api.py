@@ -5,7 +5,7 @@ from gymnasium import spaces
 from gymnasium.utils.env_checker import check_env
 from gymnasium.wrappers import FlattenObservation
 
-from tests.utils import get_all_registered_miniwob_envs
+from tests.utils import StripNondeterministicInfo, get_all_registered_miniwob_envs
 
 
 class TestGymAPI:
@@ -21,7 +21,8 @@ class TestGymAPI:
     def test_gym_api(self, env):
         """Check that the environment follows Gym API."""
         # Run check_env to check space containment, determinism, etc.
-        check_env(env.unwrapped, skip_render_check=True)
+        # We use wrapper to strip wall-clock info key "elapsed" which broke determinism checks.
+        check_env(StripNondeterministicInfo(env.unwrapped), skip_render_check=True)
         # Check the spaces and flattened spaces.
         assert isinstance(env.observation_space, spaces.Dict)
         assert set(env.observation_space) == {
