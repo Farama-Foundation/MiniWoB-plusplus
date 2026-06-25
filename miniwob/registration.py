@@ -7,7 +7,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/bisect-angle-v1",
         entry_point="miniwob.envs.miniwob_envs:BisectAngleEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/book-flight-v1",
@@ -307,7 +306,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/focus-text-2-v1",
         entry_point="miniwob.envs.miniwob_envs:FocusText2Env",
-        nondeterministic=True,
     )
     register(
         id="miniwob/grid-coordinate-v1",
@@ -373,7 +371,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/scroll-text-v1",
         entry_point="miniwob.envs.miniwob_envs:ScrollTextEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/scroll-text-2-v1",
@@ -428,7 +425,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/use-autocomplete-v1",
         entry_point="miniwob.envs.miniwob_envs:UseAutocompleteEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/use-autocomplete-nodelay-v1",

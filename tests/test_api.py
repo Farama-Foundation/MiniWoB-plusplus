@@ -24,7 +24,7 @@ class TestGymAPI:
         # Run check_env to check space containment, determinism, etc.
         for i in range(1, 4):
             try:
-                # We use wrapper to strip wall-clock info key "elapsed" which broke determinism checks.
+                # We use wrapper to strip key "elapsed" & normalize DOM obs which broke determinism checks.
                 check_env(
                     StripNondeterministicInfo(env.unwrapped), skip_render_check=True
                 )
