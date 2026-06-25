@@ -7,14 +7,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/bisect-angle-v1",
         entry_point="miniwob.envs.miniwob_envs:BisectAngleEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/book-flight-v1",
         entry_point="miniwob.envs.miniwob_envs:BookFlightEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/book-flight-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:BookFlightNodelayEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/choose-date-v1",
@@ -55,6 +58,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-checkboxes-large-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCheckboxesLargeEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-checkboxes-soft-v1",
@@ -67,18 +71,22 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-collapsible-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCollapsibleEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-collapsible-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCollapsible2Env",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-collapsible-2-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCollapsible2NodelayEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-collapsible-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCollapsibleNodelayEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-color-v1",
@@ -87,10 +95,12 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-dialog-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickDialogEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-dialog-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickDialog2Env",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-link-v1",
@@ -103,6 +113,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-menu-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickMenu2Env",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-option-v1",
@@ -121,6 +132,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-scroll-list-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickScrollListEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-shades-v1",
@@ -133,22 +145,27 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-tab-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTabEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-tab-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTab2Env",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-tab-2-easy-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTab2EasyEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-tab-2-hard-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTab2HardEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-tab-2-medium-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTab2MediumEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/click-test-v1",
@@ -193,6 +210,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/drag-cube-v1",
         entry_point="miniwob.envs.miniwob_envs:DragCubeEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/drag-items-v1",
@@ -289,6 +307,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/focus-text-2-v1",
         entry_point="miniwob.envs.miniwob_envs:FocusText2Env",
+        nondeterministic=True,
     )
     register(
         id="miniwob/grid-coordinate-v1",
@@ -321,6 +340,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/multi-layouts-v1",
         entry_point="miniwob.envs.miniwob_envs:MultiLayoutsEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/multi-orderings-v1",
@@ -353,10 +373,12 @@ def register_miniwob_envs():
     register(
         id="miniwob/scroll-text-v1",
         entry_point="miniwob.envs.miniwob_envs:ScrollTextEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/scroll-text-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ScrollText2Env",
+        nondeterministic=True,
     )
     register(
         id="miniwob/search-engine-v1",
@@ -406,6 +428,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/use-autocomplete-v1",
         entry_point="miniwob.envs.miniwob_envs:UseAutocompleteEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/use-autocomplete-nodelay-v1",
@@ -439,14 +462,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/flight.Alaska-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/flight.Alaska-auto-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaAutoEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/flight.AA-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAAEnv",
+        nondeterministic=True,
     )
     # MiniWoB test set
     register(
@@ -464,6 +490,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/drag-shapes-2-v1",
         entry_point="miniwob.envs.miniwob_envs:DragShapes2Env",
+        nondeterministic=True,
     )
     register(
         id="miniwob/drag-single-shape-v1",
@@ -472,6 +499,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/draw-circle-v1",
         entry_point="miniwob.envs.miniwob_envs:DrawCircleEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/draw-line-v1",
@@ -484,6 +512,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/form-sequence-v1",
         entry_point="miniwob.envs.miniwob_envs:FormSequenceEnv",
+        nondeterministic=True,
     )
     register(
         id="miniwob/form-sequence-2-v1",
