@@ -21,18 +21,22 @@ def register_miniwob_envs():
     register(
         id="miniwob/choose-date-v1",
         entry_point="miniwob.envs.miniwob_envs:ChooseDateEnv",
+        nondeterministic=True,  # jQuery datepicker state persists across resets; showAnim fade
     )
     register(
         id="miniwob/choose-date-easy-v1",
         entry_point="miniwob.envs.miniwob_envs:ChooseDateEasyEnv",
+        nondeterministic=True,  # jQuery datepicker state persists across resets; showAnim fade
     )
     register(
         id="miniwob/choose-date-medium-v1",
         entry_point="miniwob.envs.miniwob_envs:ChooseDateMediumEnv",
+        nondeterministic=True,  # jQuery datepicker state persists across resets; showAnim fade
     )
     register(
         id="miniwob/choose-date-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:ChooseDateNodelayEnv",
+        nondeterministic=True,  # jQuery datepicker state persists across resets
     )
     register(
         id="miniwob/choose-list-v1",
@@ -92,10 +96,12 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-dialog-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickDialogEnv",
+        nondeterministic=True,  # (Guess) jQuery UI dialog destroy/recreate cycle may desync Math.random stream
     )
     register(
         id="miniwob/click-dialog-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickDialog2Env",
+        nondeterministic=True,  # (Guess) jQuery UI dialog destroy/recreate cycle may desync Math.random stream
     )
     register(
         id="miniwob/click-link-v1",
@@ -201,6 +207,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/drag-cube-v1",
         entry_point="miniwob.envs.miniwob_envs:DragCubeEnv",
+        nondeterministic=True,  # setInterval physics loop; torque not cleared on reset
     )
     register(
         id="miniwob/drag-items-v1",
@@ -363,14 +370,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/scroll-text-v1",
         entry_point="miniwob.envs.miniwob_envs:ScrollTextEnv",
+        nondeterministic=True,  # (Guess) textarea/input focus state not reset; caret captured in screenshot
     )
     register(
         id="miniwob/scroll-text-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ScrollText2Env",
+        nondeterministic=True,  # scrollHeight-dependent scrollTop varies with font rendering
     )
     register(
         id="miniwob/search-engine-v1",
         entry_point="miniwob.envs.miniwob_envs:SearchEngineEnv",
+        nondeterministic=True,  # (Guess) twbsPagination plugin state leaks after Search click (.empty() before destroy)
     )
     register(
         id="miniwob/simple-algebra-v1",
@@ -393,6 +403,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/social-media-some-v1",
         entry_point="miniwob.envs.miniwob_envs:SocialMediaSomeEnv",
+        nondeterministic=True,  # scrollTop() getter doesn't reset feed scroll between episodes
     )
     register(
         id="miniwob/terminal-v1",
@@ -520,6 +531,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/order-food-v1",
         entry_point="miniwob.envs.miniwob_envs:OrderFoodEnv",
+        nondeterministic=True,  # scrollTop() getter doesn't reset food menu scroll between episodes
     )
     register(
         id="miniwob/phone-book-v1",
