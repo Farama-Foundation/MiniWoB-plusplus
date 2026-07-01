@@ -1,6 +1,7 @@
 """Screenshot utilities."""
 import json
 from io import BytesIO
+from typing import cast
 
 import numpy as np
 from PIL import Image, ImageCms, ImageDraw
@@ -41,7 +42,9 @@ def get_screenshot(
     if icc_profile:
         orig_icc = ImageCms.ImageCmsProfile(BytesIO(icc_profile))
         srgb_icc = ImageCms.createProfile("sRGB")
-        pil_image = ImageCms.profileToProfile(pil_image, orig_icc, srgb_icc)
+        pil_image = cast(
+            Image.Image, ImageCms.profileToProfile(pil_image, orig_icc, srgb_icc)
+        )
     return pil_image
 
 
