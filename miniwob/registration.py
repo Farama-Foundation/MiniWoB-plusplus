@@ -49,7 +49,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-button-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickButtonEnv",
-        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/click-button-sequence-v1",
@@ -70,12 +69,10 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-checkboxes-transfer-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCheckboxesTransferEnv",
-        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/click-collapsible-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCollapsibleEnv",
-        nondeterministic=True,  # accordion animation race with focus() on submit button
     )
     register(
         id="miniwob/click-collapsible-2-v1",
@@ -177,12 +174,10 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-widget-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickWidgetEnv",
-        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/copy-paste-v1",
         entry_point="miniwob.envs.miniwob_envs:CopyPasteEnv",
-        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/copy-paste-2-v1",
@@ -336,7 +331,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/multi-layouts-v1",
         entry_point="miniwob.envs.miniwob_envs:MultiLayoutsEnv",
-        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/multi-orderings-v1",
@@ -361,7 +355,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/resize-textarea-v1",
         entry_point="miniwob.envs.miniwob_envs:ResizeTextareaEnv",
-        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/right-angle-v1",
@@ -462,14 +455,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/flight.Alaska-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaEnv",
+        nondeterministic=True,  # iframe loads full airline site; observation depends on async page load timing
     )
     register(
         id="miniwob/flight.Alaska-auto-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaAutoEnv",
+        nondeterministic=True,  # iframe loads full airline site; observation depends on async page load timing
     )
     register(
         id="miniwob/flight.AA-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAAEnv",
+        nondeterministic=True,  # iframe loads full airline site; observation depends on async page load timing
     )
     # MiniWoB test set
     register(
