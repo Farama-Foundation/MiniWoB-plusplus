@@ -58,14 +58,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-checkboxes-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCheckboxesEnv",
+        nondeterministic=True,  # focus ring on checkbox captured in screenshot
     )
     register(
         id="miniwob/click-checkboxes-large-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCheckboxesLargeEnv",
+        nondeterministic=True,  # focus ring on checkbox captured in screenshot
     )
     register(
         id="miniwob/click-checkboxes-soft-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCheckboxesSoftEnv",
+        nondeterministic=True,  # focus ring on checkbox captured in screenshot
     )
     register(
         id="miniwob/click-checkboxes-transfer-v1",
@@ -187,6 +190,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/copy-paste-2-v1",
         entry_point="miniwob.envs.miniwob_envs:CopyPaste2Env",
+        nondeterministic=True,  # focus ring on textarea/input captured in screenshot
     )
     register(
         id="miniwob/count-shape-v1",
@@ -341,6 +345,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/multi-orderings-v1",
         entry_point="miniwob.envs.miniwob_envs:MultiOrderingsEnv",
+        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/navigate-tree-v1",
