@@ -87,7 +87,7 @@ Sources of non-determinism include wall-clock-dependent rendering (focus rings, 
 jQuery UI widget state that leaks across episode resets, variable `Math.random()` consumption in
 JS generation loops, and browser font-metric differences that affect layout.
 
-37 out of 128 environments are registered with `nondeterministic=True` in Gymnasium.
+39 out of 128 environments are registered with `nondeterministic=True` in Gymnasium.
 Please [submit a bug report](https://github.com/Farama-Foundation/miniwob-plusplus/issues/new/choose) if you find any new ones.
 ```
 

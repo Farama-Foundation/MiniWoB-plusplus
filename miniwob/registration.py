@@ -442,10 +442,12 @@ def register_miniwob_envs():
     register(
         id="miniwob/use-colorwheel-v1",
         entry_point="miniwob.envs.miniwob_envs:UseColorwheelEnv",
+        nondeterministic=True,  # jscolor popup + focus ring on input captured in screenshot
     )
     register(
         id="miniwob/use-colorwheel-2-v1",
         entry_point="miniwob.envs.miniwob_envs:UseColorwheel2Env",
+        nondeterministic=True,  # jscolor popup + focus ring on input captured in screenshot
     )
     register(
         id="miniwob/use-slider-v1",
