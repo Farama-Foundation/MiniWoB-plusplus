@@ -462,14 +462,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/flight.Alaska-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaEnv",
+        nondeterministic=True,  # iframe loads full airline site; observation depends on async page load timing
     )
     register(
         id="miniwob/flight.Alaska-auto-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaAutoEnv",
+        nondeterministic=True,  # iframe loads full airline site; observation depends on async page load timing
     )
     register(
         id="miniwob/flight.AA-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAAEnv",
+        nondeterministic=True,  # iframe loads full airline site; observation depends on async page load timing
     )
     # MiniWoB test set
     register(

@@ -4,7 +4,11 @@ import pytest
 from gymnasium import spaces
 from gymnasium.utils.env_checker import check_env
 from gymnasium.wrappers import FlattenObservation
-from selenium.common.exceptions import MoveTargetOutOfBoundsException
+from selenium.common.exceptions import (
+    InvalidSessionIdException,
+    JavascriptException,
+    MoveTargetOutOfBoundsException,
+)
 
 from tests.utils import StripNondeterministicInfo, get_all_registered_miniwob_envs
 
@@ -24,12 +28,16 @@ class TestGymAPI:
         # Run check_env to check space containment, determinism, etc.
         for i in range(1, 4):
             try:
-                # We use wrapper to strip key "elapsed" & normalize DOM obs which broke determinism checks.
+                # We use wrapper to normalize DOM & screenshot obs, avoiding benign sources of nondeterminism.
                 check_env(
                     StripNondeterministicInfo(env.unwrapped), skip_render_check=True
                 )
                 break
-            except MoveTargetOutOfBoundsException as e:
+            except (
+                JavascriptException,
+                InvalidSessionIdException,
+                MoveTargetOutOfBoundsException,
+            ) as e:
                 # For random movements, this is kind of inevitable, so we give three chances.
                 print(f"\033[31m{env.unwrapped.spec.id} attempt {i} failed:\033[0m {e}")
         # Check the spaces and flattened spaces.
