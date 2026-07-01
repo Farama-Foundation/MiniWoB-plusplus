@@ -497,6 +497,16 @@ Supported values are:</p>
 <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Not all MiniWoB++ environments are fully deterministic even when seeded.
+Sources of non-determinism include wall-clock-dependent rendering (focus rings,
+CSS animations), jQuery UI widget state that leaks across episode resets,
+variable <code class="docutils literal notranslate"><span class="pre">Math.random()</span></code> consumption in JS generation loops, and browser
+font-metric differences that affect layout.</p>
+<p>26 of 128 environments are registered with <code class="docutils literal notranslate"><span class="pre">nondeterministic=True</span></code> in Gymnasium.
+Please <a class="reference external" href="https://github.com/Farama-Foundation/miniwob-plusplus/issues/new/choose">submit a bug report</a> if you find any new ones.</p>
+</div>
 <p>The <a class="reference external" href="https://gymnasium.farama.org/api/env/#gymnasium.Env.reset"><code class="docutils literal notranslate"><span class="pre">reset</span></code></a>
 and <a class="reference external" href="https://gymnasium.farama.org/api/env/#gymnasium.Env.step"><code class="docutils literal notranslate"><span class="pre">step</span></code></a> methods
 return an observation, which is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with the following fields:</p>
