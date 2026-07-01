@@ -11,12 +11,12 @@ def register_miniwob_envs():
     register(
         id="miniwob/book-flight-v1",
         entry_point="miniwob.envs.miniwob_envs:BookFlightEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # datepicker "today" highlight + toLocaleTimeString() + screenshot jitter
     )
     register(
         id="miniwob/book-flight-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:BookFlightNodelayEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # datepicker "today" highlight + toLocaleTimeString() + screenshot jitter
     )
     register(
         id="miniwob/choose-date-v1",
@@ -45,6 +45,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-button-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickButtonEnv",
+        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/click-button-sequence-v1",
@@ -57,7 +58,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-checkboxes-large-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCheckboxesLargeEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-checkboxes-soft-v1",
@@ -66,26 +66,24 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-checkboxes-transfer-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCheckboxesTransferEnv",
+        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/click-collapsible-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCollapsibleEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # accordion animation race with focus() on submit button
     )
     register(
         id="miniwob/click-collapsible-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCollapsible2Env",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-collapsible-2-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCollapsible2NodelayEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-collapsible-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickCollapsibleNodelayEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-color-v1",
@@ -94,12 +92,10 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-dialog-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickDialogEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-dialog-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickDialog2Env",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-link-v1",
@@ -112,7 +108,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-menu-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickMenu2Env",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-option-v1",
@@ -121,17 +116,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-pie-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickPieEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # variable RNG consumption in arc generation
     )
     register(
         id="miniwob/click-pie-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickPieNodelayEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # variable RNG consumption in arc generation
     )
     register(
         id="miniwob/click-scroll-list-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickScrollListEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # retry-loop RNG desync + native select layout
     )
     register(
         id="miniwob/click-shades-v1",
@@ -144,27 +139,22 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-tab-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTabEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-tab-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTab2Env",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-tab-2-easy-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTab2EasyEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-tab-2-hard-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTab2HardEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-tab-2-medium-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickTab2MediumEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/click-test-v1",
@@ -181,10 +171,12 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-widget-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickWidgetEnv",
+        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/copy-paste-v1",
         entry_point="miniwob.envs.miniwob_envs:CopyPasteEnv",
+        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/copy-paste-2-v1",
@@ -209,7 +201,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/drag-cube-v1",
         entry_point="miniwob.envs.miniwob_envs:DragCubeEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/drag-items-v1",
@@ -338,7 +329,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/multi-layouts-v1",
         entry_point="miniwob.envs.miniwob_envs:MultiLayoutsEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/multi-orderings-v1",
@@ -363,6 +354,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/resize-textarea-v1",
         entry_point="miniwob.envs.miniwob_envs:ResizeTextareaEnv",
+        nondeterministic=True,  # focus ring on form element captured in screenshot
     )
     register(
         id="miniwob/right-angle-v1",
@@ -375,7 +367,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/scroll-text-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ScrollText2Env",
-        nondeterministic=True,
     )
     register(
         id="miniwob/search-engine-v1",
@@ -392,10 +383,12 @@ def register_miniwob_envs():
     register(
         id="miniwob/social-media-v1",
         entry_point="miniwob.envs.miniwob_envs:SocialMediaEnv",
+        nondeterministic=True,  # scrollTop() getter doesn't reset feed scroll between episodes
     )
     register(
         id="miniwob/social-media-all-v1",
         entry_point="miniwob.envs.miniwob_envs:SocialMediaAllEnv",
+        nondeterministic=True,  # scrollTop() getter doesn't reset feed scroll between episodes
     )
     register(
         id="miniwob/social-media-some-v1",
@@ -404,7 +397,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/terminal-v1",
         entry_point="miniwob.envs.miniwob_envs:TerminalEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/text-editor-v1",
@@ -458,17 +450,14 @@ def register_miniwob_envs():
     register(
         id="miniwob/flight.Alaska-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/flight.Alaska-auto-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaAutoEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/flight.AA-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAAEnv",
-        nondeterministic=True,
     )
     # MiniWoB test set
     register(
@@ -486,7 +475,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/drag-shapes-2-v1",
         entry_point="miniwob.envs.miniwob_envs:DragShapes2Env",
-        nondeterministic=True,
     )
     register(
         id="miniwob/drag-single-shape-v1",
@@ -495,7 +483,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/draw-circle-v1",
         entry_point="miniwob.envs.miniwob_envs:DrawCircleEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/draw-line-v1",
@@ -508,7 +495,6 @@ def register_miniwob_envs():
     register(
         id="miniwob/form-sequence-v1",
         entry_point="miniwob.envs.miniwob_envs:FormSequenceEnv",
-        nondeterministic=True,
     )
     register(
         id="miniwob/form-sequence-2-v1",
@@ -537,6 +523,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/phone-book-v1",
         entry_point="miniwob.envs.miniwob_envs:PhoneBookEnv",
+        nondeterministic=True,  # twbsPagination plugin state leaks across resets
     )
     register(
         id="miniwob/sign-agreement-v1",
@@ -545,5 +532,5 @@ def register_miniwob_envs():
     register(
         id="miniwob/stock-market-v1",
         entry_point="miniwob.envs.miniwob_envs:StockMarketEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # setInterval animation mutates DOM continuously
     )
