@@ -397,6 +397,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/terminal-v1",
         entry_point="miniwob.envs.miniwob_envs:TerminalEnv",
+        nondeterministic=True,  # setInterval cursor flicker + new Date().toDateString() in DOM
     )
     register(
         id="miniwob/text-editor-v1",
