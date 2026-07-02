@@ -81,6 +81,18 @@ observation, info = env.reset(seed=42)
 observation, reward, terminated, truncated, info = env.step(action)
 ```
 
+```{warning}
+Not all MiniWoB++ environments are fully deterministic even when seeded.
+Sources of non-determinism include wall-clock-dependent rendering (focus rings, CSS animations),
+jQuery UI widget state that leaks across episode resets, variable `Math.random()` consumption in
+JS generation loops, and browser font-metric differences that affect layout.
+It is highly recommended to pass in `wait_ms=150` or higher when constructing the environment with
+`gymnasium.make` if determinism is desirable as this may allow browser to finish certain tasks.
+
+25 out of 128 environments are registered with `nondeterministic=True` in Gymnasium.
+Please report in issue [#119](https://github.com/Farama-Foundation/miniwob-plusplus/issues/119) if you find any new ones.
+```
+
 The [`reset`](https://gymnasium.farama.org/api/env/#gymnasium.Env.reset)
 and [`step`](https://gymnasium.farama.org/api/env/#gymnasium.Env.step) methods
 return an observation, which is a `dict` with the following fields:

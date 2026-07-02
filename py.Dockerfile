@@ -10,4 +10,4 @@ RUN apt-get install -y chromium chromium-driver
 
 COPY . /usr/local/miniwob-plusplus/
 WORKDIR /usr/local/miniwob-plusplus/
-RUN pip install -e .[testing] --no-cache-dir
+RUN pip install -e .[testing] pytest-xdist --no-cache-dir

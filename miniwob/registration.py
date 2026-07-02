@@ -11,26 +11,32 @@ def register_miniwob_envs():
     register(
         id="miniwob/book-flight-v1",
         entry_point="miniwob.envs.miniwob_envs:BookFlightEnv",
+        nondeterministic=True,  # datepicker "today" highlight + toLocaleTimeString() + screenshot jitter
     )
     register(
         id="miniwob/book-flight-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:BookFlightNodelayEnv",
+        nondeterministic=True,  # datepicker "today" highlight + toLocaleTimeString() + screenshot jitter
     )
     register(
         id="miniwob/choose-date-v1",
         entry_point="miniwob.envs.miniwob_envs:ChooseDateEnv",
+        nondeterministic=True,  # jQuery datepicker state persists across resets; showAnim fade
     )
     register(
         id="miniwob/choose-date-easy-v1",
         entry_point="miniwob.envs.miniwob_envs:ChooseDateEasyEnv",
+        nondeterministic=True,  # jQuery datepicker state persists across resets; showAnim fade
     )
     register(
         id="miniwob/choose-date-medium-v1",
         entry_point="miniwob.envs.miniwob_envs:ChooseDateMediumEnv",
+        nondeterministic=True,  # jQuery datepicker state persists across resets; showAnim fade
     )
     register(
         id="miniwob/choose-date-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:ChooseDateNodelayEnv",
+        nondeterministic=True,  # jQuery datepicker state persists across resets
     )
     register(
         id="miniwob/choose-list-v1",
@@ -87,10 +93,12 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-dialog-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickDialogEnv",
+        nondeterministic=True,  # (Guess) jQuery UI dialog destroy/recreate cycle may desync Math.random stream
     )
     register(
         id="miniwob/click-dialog-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickDialog2Env",
+        nondeterministic=True,  # (Guess) jQuery UI dialog destroy/recreate cycle may desync Math.random stream
     )
     register(
         id="miniwob/click-link-v1",
@@ -111,16 +119,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/click-pie-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickPieEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # variable RNG consumption in arc generation
     )
     register(
         id="miniwob/click-pie-nodelay-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickPieNodelayEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # variable RNG consumption in arc generation
     )
     register(
         id="miniwob/click-scroll-list-v1",
         entry_point="miniwob.envs.miniwob_envs:ClickScrollListEnv",
+        nondeterministic=True,  # retry-loop RNG desync + native select layout
     )
     register(
         id="miniwob/click-shades-v1",
@@ -193,6 +202,7 @@ def register_miniwob_envs():
     register(
         id="miniwob/drag-cube-v1",
         entry_point="miniwob.envs.miniwob_envs:DragCubeEnv",
+        nondeterministic=True,  # setInterval physics loop; torque not cleared on reset
     )
     register(
         id="miniwob/drag-items-v1",
@@ -353,14 +363,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/scroll-text-v1",
         entry_point="miniwob.envs.miniwob_envs:ScrollTextEnv",
+        nondeterministic=True,  # (Guess) textarea/input focus state not reset; caret captured in screenshot
     )
     register(
         id="miniwob/scroll-text-2-v1",
         entry_point="miniwob.envs.miniwob_envs:ScrollText2Env",
+        nondeterministic=True,  # scrollHeight-dependent scrollTop varies with font rendering
     )
     register(
         id="miniwob/search-engine-v1",
         entry_point="miniwob.envs.miniwob_envs:SearchEngineEnv",
+        nondeterministic=True,  # (Guess) twbsPagination plugin state leaks after Search click (.empty() before destroy)
     )
     register(
         id="miniwob/simple-algebra-v1",
@@ -373,19 +386,22 @@ def register_miniwob_envs():
     register(
         id="miniwob/social-media-v1",
         entry_point="miniwob.envs.miniwob_envs:SocialMediaEnv",
+        nondeterministic=True,  # scrollTop() getter doesn't reset feed scroll between episodes
     )
     register(
         id="miniwob/social-media-all-v1",
         entry_point="miniwob.envs.miniwob_envs:SocialMediaAllEnv",
+        nondeterministic=True,  # scrollTop() getter doesn't reset feed scroll between episodes
     )
     register(
         id="miniwob/social-media-some-v1",
         entry_point="miniwob.envs.miniwob_envs:SocialMediaSomeEnv",
+        nondeterministic=True,  # scrollTop() getter doesn't reset feed scroll between episodes
     )
     register(
         id="miniwob/terminal-v1",
         entry_point="miniwob.envs.miniwob_envs:TerminalEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # setInterval cursor flicker + new Date().toDateString() in DOM
     )
     register(
         id="miniwob/text-editor-v1",
@@ -439,14 +455,17 @@ def register_miniwob_envs():
     register(
         id="miniwob/flight.Alaska-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaEnv",
+        nondeterministic=True,  # iframe loads full airline site; observation depends on async page load timing
     )
     register(
         id="miniwob/flight.Alaska-auto-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAlaskaAutoEnv",
+        nondeterministic=True,  # iframe loads full airline site; observation depends on async page load timing
     )
     register(
         id="miniwob/flight.AA-v1",
         entry_point="miniwob.envs.flightwob_envs:FlightAAEnv",
+        nondeterministic=True,  # iframe loads full airline site; observation depends on async page load timing
     )
     # MiniWoB test set
     register(
@@ -508,10 +527,12 @@ def register_miniwob_envs():
     register(
         id="miniwob/order-food-v1",
         entry_point="miniwob.envs.miniwob_envs:OrderFoodEnv",
+        nondeterministic=True,  # scrollTop() getter doesn't reset food menu scroll between episodes
     )
     register(
         id="miniwob/phone-book-v1",
         entry_point="miniwob.envs.miniwob_envs:PhoneBookEnv",
+        nondeterministic=True,  # twbsPagination plugin state leaks across resets
     )
     register(
         id="miniwob/sign-agreement-v1",
@@ -520,5 +541,5 @@ def register_miniwob_envs():
     register(
         id="miniwob/stock-market-v1",
         entry_point="miniwob.envs.miniwob_envs:StockMarketEnv",
-        nondeterministic=True,
+        nondeterministic=True,  # setInterval animation mutates DOM continuously
     )
