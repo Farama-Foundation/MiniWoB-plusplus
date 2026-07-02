@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Form Sequence Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<link rel="stylesheet" href="../core/jquery-ui/jquery-ui.min.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+<script src="../core/jquery-ui/jquery-ui.min.js"></script>
+<script src="../common/ui_utils.js"></script>
+
+<style>
+#area > div { margin: 10px 2px; }
+#subbtn { height: 40px; }
+
+#val { margin-top: 5px; margin-left: 5px; display: inline-block; }
+#slider { display: inline-block; }
+</style>
+
+<script>
+var CHECKBOX_POS = [
+  '',
+  '1st',
+  '2nd',
+  '3rd',
+];
+
+var genProblem = function() {
+  $('#area input').attr('checked', false);
+
+  var vmin = -10
+  var vmax = 10;
+  var ori = core.sample(['horizontal', 'vertical']);
+
+  var slider = $('#slider').slider({
+    change: function(event, ui) { document.getElementById('val').innerHTML = ui.value; },
+    min: vmin,
+    max: vmax,
+    step: 1,
+    value: core.randi(vmin, vmax+1),
+    orientation: 'horizontal',
+    // function below updates the text value as the slider slides,
+    // as opposed to only updating the value once the slider is released.
+    slide: function(event,ui){ $('#val').text(ui.value); },
+  });
+
+
+  $('#slider').attr('style', 'width:' + core.randi(50, 115) + 'px;');
+
+  document.getElementById('val').innerHTML = slider.slider('value');
+  var n = core.randi(vmin,vmax+1);
+
+  var expectedCheckbox = core.randi(1,4);
+
+  $('#query').html('Select ' + n + ' with the slider, click the ' + CHECKBOX_POS[expectedCheckbox] + ' checkbox, then hit Submit.');
+
+  $('#subbtn').unbind('click');
+  $('#subbtn').on('click', function(){
+    var sliderVal = slider.slider('value');
+    var totalChecked = $('input:checked').length;
+    var positiveReward = (n === sliderVal) && (totalChecked === 1) && ($('#checkbox-'+expectedCheckbox).prop('checked'))
+    var r = positiveReward ? 1.0 : -1.0;
+    core.endEpisode(r, r>0);
+  });
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Click the button.</div>
+  <div id="area">
+    <div>
+      <div id="slider"></div>
+      <div id="val">0</div>
+    </div>
+    <div>
+      <input type="checkbox" id='checkbox-1'>
+      <input type="checkbox" id='checkbox-2'>
+      <input type="checkbox" id='checkbox-3'>
+    </div>
+    <div>
+      <button id="subbtn" class="secondary-action">Submit</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

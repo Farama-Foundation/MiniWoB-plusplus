@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Find Greatest Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/d3.v3.min.js"></script>
+
+<style>
+#cardholder { text-align: center; margin-top: 15px; }
+.card { display: inline-block; height: 60px; width: 40px; border: 1px solid black; font-size: 25px;
+  line-height: 50px; margin: 2px 5px; vertical-align: middle; border-radius: 3px; }
+.card.hidden { cursor: pointer; font-size: 0; background-image: url("stripe.png"); background-color: #ea2a3a;
+    background-image: linear-gradient(-45deg, rgba(255, 255, 255, .9) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .9) 50%, rgba(255, 255, 255, .9) 75%, transparent 75%, transparent); }
+.controls{ text-align: center; margin: 15px 0; }
+#submit { width: 70px; height: 30px; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 10000;
+var TOTAL_CARDS = 3;
+var CARD_TEMPLATE = `<span class="card-value"></span>`
+
+var generateCards = function(){
+  var numberSet = []
+  for(var i=0;i<TOTAL_CARDS;i++){
+    var newNumber = generateNumber(numberSet);
+    numberSet.push(newNumber);
+    displayCard(newNumber, i);
+  }
+  return numberSet;
+}
+
+var generateNumber = function(existingNumbers){
+  var generateNumber = true;
+  var UPPER_BOUND = core.randi(10,26);
+  while(generateNumber){
+    var num = core.randi(0, UPPER_BOUND);
+    if(existingNumbers.indexOf(num) !== -1) continue;
+    else generateNumber = false;
+  }
+  return num;
+}
+
+var displayCard = function(number, index){
+  var div = document.createElement('div');
+  div.innerHTML = CARD_TEMPLATE;
+  div.setAttribute('class', 'card hidden')
+  div.getElementsByClassName('card-value')[0].innerHTML = number;
+  div.setAttribute('data-index', index);
+  d3.select('#cardholder')[0][0].appendChild(div);
+}
+
+var findGreatestNumber = function(cardNumbers){
+  var greatest = -11;
+  for(var i=0;i<cardNumbers.length;i++){
+    greatest = greatest < cardNumbers[i] ? cardNumbers[i] : greatest;
+  }
+
+  return cardNumbers.indexOf(greatest);
+}
+
+var genProblem = function() {
+  d3.select('#cardholder').html('');
+  var cardNumbers = generateCards();
+  var expectedIndex = findGreatestNumber(cardNumbers);
+
+  d3.selectAll('.card.hidden').on('click', function(){
+    d3.selectAll('.card').classed('card hidden', true);
+    this.setAttribute('class', 'card');
+  });
+
+  d3.select('#submit').on('click', function(){
+    if(d3.selectAll('.card.hidden')[0].length === 3) {core.endEpisode(-1.0, false); return;}
+    var userIndex = d3.select('.card:not(.hidden)')[0][0].getAttribute('data-index');
+    if(userIndex === expectedIndex.toString()) core.endEpisode(1.0, true);
+    else core.endEpisode(0.1, true);
+  });
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Find and pick the card with the greatest number, then press submit.</div>
+  <div id="area">
+    <div id="cardholder"></div>
+    <div class="controls">
+      <button id="submit">Submit</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,304 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<!-- credit to Freepik via http://www.flaticon.com/authors/freepik for the food icons used. -->
+<title>Order Food Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+<script src="../common/ui_utils.js"></script>
+
+<style>
+  #area { height: 156px; overflow-y: scroll; }
+  #appetizer, #entree, #dessert { display: inline-block; }
+  .food-item { display: inline-block; padding: 2px 0; width: 90%; border-top: 1px solid #acacac; }
+  .food-item .food-desc { width: 70%; float: left; }
+    .food-item .food-desc { font-size: 12px; }
+    .food-item .types img { width: 20px; }
+
+  .food-item .food-order { width: 28%; float: right; text-align: right; }
+  .food-item .food-order .remove, .food-item .food-order .add { font-weight: bold; font-size: 20px; }
+  .food-item .food-order .quantity { min-width: 7px; display: inline-block; font-size: 15px; }
+  .food-order span { user-select: none; }
+  #submit-order button { width: 70px; height: 35px; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 20000;
+var EXPECTED_ANSWERS = 2;
+
+var FOOD_TYPES = [
+  'dairy',
+  'gluten-free',
+  'meat',
+  'peanuts',
+  'vegan',
+];
+
+
+var MENU = [
+  {
+    'id': 0,
+    'name': 'Caesar Salad',
+    'course': 'appetizer',
+    'types': ['vegan', 'gluten-free',],
+  },
+  {
+    'id': 1,
+    'name': 'Garlic bread',
+    'course': 'appetizer',
+    'types': ['vegan'],
+  },
+  {
+    'id': 2,
+    'name': 'Spinach and goat cheese dip',
+    'course': 'appetizer',
+    'types': ['dairy', 'gluten-free'],
+  },
+  {
+    'id': 3,
+    'name': 'Chicken wings',
+    'course': 'appetizer',
+    'types': ['meat'],
+  },
+  {
+    'id': 4,
+    'name': 'Tofu and Vegetable stone pot',
+    'course': 'entree',
+    'types': ['vegan', 'gluten-free'],
+  },
+  {
+    'id': 5,
+    'name': 'Spicy Thai Peanut Chicken',
+    'course': 'entree',
+    'types': ['meat', 'peanuts',],
+  },
+  {
+    'id': 6,
+    'name': 'Grilled Pork Tenderloin',
+    'course': 'entree',
+    'types': ['meat', 'gluten-free'],
+  },
+  {
+    'id': 7,
+    'name': 'Spaghetti and Meatballs',
+    'course': 'entree',
+    'types': ['meat'],
+  },
+  {
+    'id': 8,
+    'name': 'Cheese wheel',
+    'course': 'dessert',
+    'types': ['dairy', 'gluten-free'],
+  },
+  {
+    'id': 9,
+    'name': 'Chocolate cake',
+    'course': 'dessert',
+    'types': ['dairy'],
+  },
+  {
+    'id': 10,
+    'name': 'Ice cream sundae',
+    'course': 'dessert',
+    'types': ['dairy', 'peanuts', 'gluten-free'],
+  },
+  {
+    'id': 11,
+    'name': ' Coconut mango tart',
+    'course': 'dessert',
+    'types': ['vegan'],
+  }
+]
+
+var ITEM_TEMPLATE = `
+  <div class='food-desc'>
+    <div class='item-name'></div>
+    <div class='types'></div>
+  </div>
+  <div class='food-order'>
+    <span class='remove'>-</span>
+    <span class='quantity'> </span>
+    <span class='add'>+</span>
+  </div>
+`
+
+var MENU_LIST_TEMPLATE = `
+  <div id="appetizer">
+    <h2>Appetizers</h2>
+  </div>
+  <div id="entree">
+    <h2>Entrees</h2>
+  </div>
+  <div id="dessert">
+    <h2>Desserts</h2>
+  </div>
+  <div id="submit-order">
+    <button>Order!</button>
+  </div>
+`
+
+var generateMenu = function(){
+  for(var i=0;i<MENU.length;i++){
+    generateItem(MENU[i]);
+  }
+}
+
+var generateItem = function(item){
+  var div = document.createElement('div');
+  div.setAttribute('class', 'food-item');
+  div.setAttribute('data-quantity', '0');
+  div.setAttribute('data-item', item['name']);
+  div.setAttribute('data-id', item['id']);
+  div.innerHTML = ITEM_TEMPLATE;
+  var course = item['course'];
+  div.getElementsByClassName('item-name')[0].innerHTML = item['name'];
+
+  // populate icons
+  for(var i=0;i<item.types.length;i++){
+    var img = document.createElement('img');
+    img.setAttribute('src', '../common/special/order-food/' + item.types[i] +'.png');
+    img.setAttribute('alt', item.types[i]);
+    img.setAttribute('title', item.types[i]); // do this for Chrome
+    div.getElementsByClassName('types')[0].appendChild(img);
+  }
+
+  $('#area').find('#'+course).append(div);
+}
+
+var displayQuantity = function($item, quantity){
+  if(quantity<=0){
+    quantity = 0;
+    $item.find('.quantity').text('');
+    $item.removeClass('selected');
+  } else {
+    $item.find('.quantity').text(quantity);
+    $item.addClass('selected');
+  }
+  $item.attr('data-quantity', quantity);
+}
+
+var bindClickEvents = function(){
+  $('.food-item .remove').on('click', function(){
+    var $item = $(this).parents('.food-item');
+    var quantity = parseInt($item.attr('data-quantity'),10)-1;
+    displayQuantity($item, quantity);
+  });
+
+  $('.food-item .add').on('click', function(){
+    var $item = $(this).parents('.food-item');
+    var quantity = parseInt($item.attr('data-quantity'),10)+1;
+    displayQuantity($item, quantity);
+  });
+}
+
+var chooseItemsByName = function(){
+  var expectedItems = [];
+  while(expectedItems.length < EXPECTED_ANSWERS){
+    var chosenItem = core.sample(MENU);
+    if(expectedItems.map(function(v){ return v.id; }).indexOf(chosenItem.id) === -1){
+      expectedItems.push(chosenItem);
+    }
+  }
+
+  $('#query').html('Order one of each item: ' + expectedItems.map(function(v,i){return v.name;}).join(', '));
+
+  $('#submit-order button').on('click', function(){
+    var selectedItems = [];
+    $('.food-item.selected').each(function(i, v){
+      var itemId = $(v).attr('data-id');
+      var quantity = $(v).attr('data-quantity');
+      var item = { 'quantity': quantity, 'id': itemId };
+      selectedItems.push(item);
+    });
+
+
+    if(itemsMatchByName(expectedItems, selectedItems)){
+       core.endEpisode(1.0, true);
+    } else {
+      core.endEpisode(-1.0);
+    }
+
+  });
+}
+
+var itemsMatchByName = function(expectedItems, selectedItems){
+  if(selectedItems.length === 0) return false;
+
+  var selectedNames = selectedItems.map(function(v){ return MENU[v.id].name; });
+  var expectedNames = expectedItems.map(function(v){ return v.name; });
+  var matchingLength = expectedItems.length === selectedItems.length;
+  var matchingContents = expectedNames.every(function(v){ return selectedNames.indexOf(v) !== -1});
+  var uniqueItems = selectedItems.every(function(v){ return parseInt(v.quantity,10) === 1; });
+  if(matchingLength && matchingContents && uniqueItems) return true;
+  return false;
+}
+
+var chooseItemsByType = function(){
+  var expectedQuantity = core.randi(2,5);
+  var expectedType = core.sample(FOOD_TYPES);
+
+  $('#query').html('Order ' + expectedQuantity + ' items that are ' + expectedType);
+
+  $('#submit-order button').on('click', function(){
+    var selectedItems = [];
+    $('.food-item.selected').each(function(i, v){
+      var itemId = $(v).attr('data-id');
+      var quantity = $(v).attr('data-quantity');
+      var item = { 'quantity': quantity, 'id': itemId };
+      selectedItems.push(item);
+    });
+
+
+    if(itemsMatchByType(expectedType, expectedQuantity, selectedItems)){
+       core.endEpisode(1.0, true);
+    } else {
+      core.endEpisode(-1.0);
+    }
+
+  });
+}
+
+var itemsMatchByType = function(expectedType, expectedQuantity, selectedItems){
+  if(selectedItems.length === 0) return false;
+
+  var selectedQuantity = selectedItems.map(function(v){ return parseInt(v.quantity,10); }).reduce(function(a,b){ return a+b;});
+  var matchingQuantity = selectedQuantity == expectedQuantity;
+  var matchingTypes = selectedItems.every(function(v){ return MENU[v.id].types.indexOf(expectedType) !== -1 });
+
+  if(matchingQuantity && matchingTypes) return true;
+  return false;
+}
+
+var genProblem = function() {
+  $('#area').empty().scrollTop();
+  $('#area').html(MENU_LIST_TEMPLATE);
+  generateMenu();
+  bindClickEvents();
+
+  // keep the problem simple! either order by name,
+  // or order by food type. only required to order 2 items.
+
+  var problemType = core.sample([0,1]);
+  if(problemType === 0){
+    chooseItemsByName();
+  } else if(problemType === 1) {
+    chooseItemsByType();
+  }
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Order an item.</div>
+  <div id="area">
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Draw Line Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/d3.v4.min.js"></script>
+
+<style>
+  svg { border: 1px dotted black; height: 110px; width: 150px; }
+  path { fill: none; stroke: #000; stroke-width: 5px; stroke-linejoin: round; stroke-linecap: round; }
+  #controls { text-align: center; }
+  #controls button { padding: 8px 10px; }
+  #controls button:focus { outline: none; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 10000;
+
+var startX, startY;
+var lastX, lastY;
+var arrayPoints = [];
+
+var generateCenter = function(){
+  // generate a new random grid of shapes
+  var cx = Math.random() * 100 + 30 - 4;
+  var cy = Math.random() * 60 + 30 - 4;
+  var svg = d3.select('svg');
+  var circle = svg
+    .append('circle')
+    .attr('id', 'circ')
+    .attr('fill', 'purple')
+    .attr('cx', cx + 4)
+    .attr('cy', cy + 4)
+    .attr('r', 4 + 'px');
+
+  return [cx, cy];
+}
+
+var drawLine = function(){
+  var line = d3.line()
+    .curve(d3.curveBasis);
+
+  var svg = d3.select("svg")
+    .call(d3.drag()
+        .container(function() { return this; })
+        .subject(function() { var p = [d3.event.x, d3.event.y]; return [p, p]; })
+        .on("start", dragstarted));
+
+  function dragstarted() {
+    d3.select('path').remove();
+    startX = d3.event.x;
+    startY = d3.event.y;
+    arrayPoints = [[startX, startY]];
+
+    var d = d3.event.subject,
+        active = svg.append("path").datum(d),
+        x0 = d3.event.x,
+        y0 = d3.event.y;
+
+    d3.event.on("drag", function() {
+      var x1 = d3.event.x,
+          y1 = d3.event.y,
+          dx = x1 - x0,
+          dy = y1 - y0;
+          lastX = x1;
+          lastY = y1;
+          arrayPoints.push([x1,y1]);
+
+      if (dx * dx + dy * dy > 100) d.push([x0 = x1, y0 = y1]);
+      else d[d.length - 1] = [x1, y1];
+      active.attr("d", line);
+    });
+  }
+}
+
+var meanCoords = function(arr){
+  var meanX = 0;
+  var meanY = 0;
+  for(var i=0; i<arr.length; i++){
+    var currPoint = arr[i];
+    meanX += currPoint[0];
+    meanY += currPoint[1];
+  }
+
+  return [meanX/arr.length, meanY/arr.length];
+}
+
+var standardDevs = function(arr, avgCoord){
+  var xDiffsSquared = 0;
+  var YDiffsSquared = 0;
+  for(var i=0;i<arr.length;i++){
+    var currPoint = arr[i];
+
+    var xDiffSquared = (currPoint[0] - avgCoord[0])*(currPoint[0] - avgCoord[0]);
+    xDiffsSquared += xDiffSquared;
+
+    var yDiffSquared = (currPoint[1] - avgCoord[1])*(currPoint[1] - avgCoord[1]);
+    YDiffsSquared += yDiffSquared;
+  }
+  var xStdDev =  Math.sqrt(xDiffSquared/arr.length);
+  var yStdDev =  Math.sqrt(yDiffSquared/arr.length);
+  return [xStdDev, yStdDev];
+}
+
+var findStandardDevs = function(points){
+  var avgCoords = meanCoords(points);
+  var stdDevs = standardDevs(points, avgCoords);
+  return stdDevs;
+}
+
+var properDirection = function(problemType, stdDevs){
+  if(problemType === 'horizontal') return checkHorizontal(stdDevs);
+  else if(problemType === 'vertical') return checkVertical(stdDevs);
+}
+
+var checkHorizontal = function(stdDevs){
+  // var path = d3.select('path')._groups[0][0];
+  // var pathDims = path.getBoundingClientRect();
+
+  var verticalness;
+  if(stdDevs[1] < 1.5) verticalness = 1.0;
+  else if (stdDevs[1] < 2.5) verticalness = 0.50;
+  else if (stdDevs[1] < 4.5) verticalness = -0.50;
+  else if (stdDevs[1] < 6.0) verticalness = -0.75;
+  else verticalness = -1.0;
+
+  var horizontalness;
+  if(stdDevs[0] > 5) horizontalness = 1.0;
+  else if (stdDevs[0] > 4) horizontalness = 0.75;
+  else if (stdDevs[0] > 2.5) horizontalness = 0.50;
+  else if (stdDevs[0] > 1) horizontalness = 0.25;
+  else horizontalness = 0.10;
+
+  console.log({type: 'horizontal', sd: stdDevs, h: horizontalness, v: verticalness});
+  return horizontalness * verticalness;
+}
+
+var checkVertical = function(stdDevs){
+  // var path = d3.select('path')._groups[0][0];
+  // var pathDims = path.getBoundingClientRect();
+
+  var horizontalness;
+  if(stdDevs[0] < 1.5) horizontalness = 1.0;
+  else if (stdDevs[0] < 2.5) horizontalness = 0.50;
+  else if (stdDevs[0] < 4.5) horizontalness = -0.50;
+  else if (stdDevs[0] < 6.0) horizontalness = -0.75;
+  else horizontalness = -1.0;
+
+  var verticalness;
+  if(stdDevs[1] > 5) verticalness = 1.0;
+  else if (stdDevs[1] > 4) verticalness = 0.75;
+  else if (stdDevs[1] > 2.5) verticalness = 0.50;
+  else if (stdDevs[1] > 1) verticalness = 0.25;
+  else verticalness = 0.1;
+
+  console.log({type: 'vertical', sd: stdDevs, h: horizontalness, v: verticalness});
+  return horizontalness * verticalness;
+}
+
+var touchesPoint = function(arrayPoints, destination){
+  var shortestDistance = 100;
+  for(var i=0;i<arrayPoints.length;i++){
+    var currPoint = arrayPoints[i];
+    var d = findDistance(currPoint, destination);
+    shortestDistance = d < shortestDistance ? d : shortestDistance;
+  }
+
+  console.log({d: shortestDistance});
+  if(shortestDistance < 6.0) return 1.0;
+  else if(shortestDistance < 10.0) return 0.75;
+  else if(shortestDistance < 15.0) return 0.50;
+  else if(shortestDistance < 20.0) return 0.25;
+  else if(shortestDistance < 25.0) return 0.10;
+  else if(shortestDistance < 35.0) return 0;
+  else if(shortestDistance < 45.0) return -0.25;
+  else if(shortestDistance < 55.0) return -.50;
+  else return -1.0;
+}
+
+var findDistance = function(pointA, pointB){
+  var xDiff = (pointA[0] - pointB[0])*(pointA[0] - pointB[0]);
+  var yDiff = (pointA[1] - pointB[1])*(pointA[1] - pointB[1]);
+  var d = Math.sqrt( xDiff + yDiff );
+  return d;
+}
+
+var genProblem = function() {
+  d3.select('svg').selectAll('*').remove();
+
+  var markedPoint = generateCenter();
+
+  var problemType = core.sample([true, false]) ? 'horizontal' : 'vertical';
+  d3.select('#query').html('Draw a ' + problemType + ' line that runs through the dot, then press submit.');
+
+  d3.select('#controls button').on('click', function(){
+    if(d3.select('path')._groups[0][0] === null) core.endEpisode(-1.0);
+    else {
+      var stdDevs = findStandardDevs(arrayPoints);
+      var directionReward = properDirection(problemType, stdDevs)*0.8;
+      var crossesPointReward = touchesPoint(arrayPoints, markedPoint)*0.2;
+      var reward =  directionReward + crossesPointReward;
+      core.endEpisode(reward, reward>0);
+    }
+  });
+}
+
+window.onload = function() {
+  core.startEpisode();
+  drawLine();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Click button ONE, then click button TWO.</div>
+  <div id="area">
+    <svg></svg>
+    <div id="controls"><button>Submit</button></div>
+  </div>
+</div>
+</body>
+</html>

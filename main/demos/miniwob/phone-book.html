@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Phone Book Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+<script src="../common/ui_utils.js"></script>
+<script src="../common/special/search-engine/jquery.twbsPagination.min.js"></script>
+
+<style>
+#area { height: 156px; position: relative; }
+#contact .property { display: block; margin: 4px 4px; }
+#contact .property-name { font-weight: bold; }
+#contact a { color: #0000ff; text-decoration: underline; cursor: pointer; }
+#pagination { font-size: 15px; margin: 0; position: absolute; bottom: 10px; }
+
+/* styling for the pagination widget */
+.pagination > li { display: inline; margin: 0 2px; }
+.pagination a:visited { color: #0000EE !important; }
+.disabled { display: none !important; }
+.page-item.active a { color: #000000; text-decoration: none; }
+.page-item.first, .page-item.last { display: none !important; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 15000;
+var DIV_TEMPLATE =
+  `<h2 class="name"></h2>
+  <div class="property"><span class="property-name">Phone: </span><span><a class="phone"></a></span></div>
+  <div class="property"><span class="property-name">Email: </span><span><a class="email"></a></span></div>
+  <div class="property"><span class="property-name">Address: </span><span><a class="address"></a></span></div>`
+var TOTAL_RESULTS = 5;
+var POSITION = ['', 'st', 'nd', 'rd'];
+var DOMAINS = ['com', 'net', 'org', 'ca', 'us', 'gov', 'pizza', 'gg', 'tv', 'co.uk', 'it', 'eu', 'hk', 'mx', 'se', 'jp', 'io', 'rocks'];
+
+
+var displayContact = function(contact, index){
+  var div = document.createElement('div');
+  div.innerHTML = DIV_TEMPLATE;
+  div.getElementsByClassName('name')[0].innerHTML = contact.person;
+  div.getElementsByClassName('name')[0].setAttribute('data-index', index);
+  div.getElementsByClassName('phone')[0].innerHTML = contact.phone;
+  div.getElementsByClassName('email')[0].innerHTML = contact.email;
+  div.getElementsByClassName('address')[0].innerHTML = contact.address;
+  $('#contact').append(div);
+}
+
+var resetUI = function(){
+  $('#contact').empty();
+  $('#pagination').empty();
+}
+
+var bindClickEvents = function(problemSet, expectedDetails){
+  // clear the existing pagination modal, and rebuild it on click
+  $('#pagination').twbsPagination('destroy');
+
+  $('#pagination').twbsPagination({
+    totalPages: 5,
+    visiblePages: 1,
+
+    onPageClick: function (event, page) {
+      $('#contact').empty();
+      displayContact(problemSet[page-1], page-1);
+
+      $('#contact a').unbind();
+      $('#contact a').on('click', function(){
+        var linkIndex = $(this).parents('#contact').find('.name').attr('data-index');
+        var correctIndex = linkIndex === expectedDetails.index.toString() ? 1.0 : -1.0;
+        var correctProperty = expectedDetails.property === this.getAttribute('class') ? 1.0 : -1.0;
+        var r = correctIndex*0.7 + correctProperty*0.3;
+        core.endEpisode(r, r > 0);
+
+      });
+
+    },
+    prev: '<',
+    next: '>'
+  });
+}
+
+var generateContacts = function(){
+  var results = [];
+  var names = core.shuffle(ui_utils.PEOPLE_NAMES.slice());
+  for(var i=0;i<TOTAL_RESULTS;i++){
+    var result = {}
+    result.person = core.sample(names);
+    result.email = generateEmail(result.person);
+    result.address = generateAddress();
+    result.phone = generatePhoneNumber();
+    results.push(result);
+  }
+  return results;
+}
+
+var generateEmail = function(personName){
+  var substr = personName.length < 5 ?  core.randi(3,personName.length) : core.randi(3,5);
+  var username = core.sample([true, false]) ? personName.toLowerCase() : personName.substring(0,substr).toLowerCase();
+  var numberSuffix = core.sample([true, false]) ? '' : core.randi(10,10000);
+  var host = core.sample(['hotmail', 'yahoo', 'gmail', 'aol', 'live', 'fb', 'openai', 'myspace', 'skynet']);
+  var tld = core.sample(DOMAINS);
+
+  var email = username + numberSuffix + '@' + host + '.' + tld;
+  return email;
+}
+
+var generateAddress = function(){
+  var addressNumber = core.randi(1,10000);
+  var streetName = core.sample(ui_utils.LAST_NAMES);
+  var streetSuffix = core.sample(['Court', 'Ct', 'Street', 'St', 'Road', 'Rd', 'Drive', 'Dr', 'Avenue', 'Ave', 'Alley', 'Boulevard',
+   'Blvd', 'Crescent', 'Cres', 'Grove', 'Gr', 'Lane', 'Loop', 'Park', 'Place', 'Square', 'Terrace', 'Tce']);
+
+  // padded with additional false to reduce possibility of apartment/units
+  var address = addressNumber + ' ' + streetName + ' ' + streetSuffix;
+  if(core.sample([true, false, false, false])) address += ', ' + core.sample(['Apt', 'Unit']) + ' ' + core.randi(1,50);
+
+  return address;
+}
+
+var generatePhoneNumber = function(){
+  var phoneNumber = '';
+  var areaCode = core.randi(110, 990);
+  var middleThree = core.randi(0,1000);
+  var lastFour = core.randi(0, 10000);
+
+  phoneNumber += areaCode + '-' + leftPadNumbers(middleThree, 3) + '-' + leftPadNumbers(lastFour, 4);
+  return phoneNumber;
+}
+
+var leftPadNumbers = function(number, expectedLength){
+  var str = '' + number;
+  while(str.length < expectedLength){
+    str = '0' + str;
+  }
+  return str;
+}
+
+var chooseContact = function(problemSet){
+  var index = core.randi(0, TOTAL_RESULTS);
+  var property = core.sample(['phone', 'email', 'address']);
+  return {index: index, contact: problemSet[index], property: property};
+}
+
+var displayProblem = function(expectedContact){
+  var txt = 'Find ' + expectedContact.contact.person + ' in the contact book and click on their ' + expectedContact.property;
+  txt += expectedContact.property === 'phone' ? ' number.' : '.';
+  $('#query').html(txt);
+}
+
+var genProblem = function() {
+  resetUI();
+
+  var problemSet = generateContacts();
+  displayContact(problemSet[0], 0);
+  var expectedContact = chooseContact(problemSet);
+  displayProblem(expectedContact);
+  bindClickEvents(problemSet, expectedContact);
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query"></div>
+  <div id="area">
+    <div id="contact"></div>
+    <ul id="pagination"></ul>
+  </div>
+</div>
+</body>
+</html>

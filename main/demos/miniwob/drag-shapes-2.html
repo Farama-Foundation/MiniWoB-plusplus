@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Drag Shapes 2 Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/d3.v3.min.js"></script>
+<script src="../common/shapes.js"></script>
+
+<style>
+#area { position: relative; }
+#area_svg { width: 160px; height: 160px; }
+#shape_box { width: 50px; height: 50px; border: 1px solid black;  position: absolute; top: 80px; z-index: 10; }
+#resetBtn { position: absolute; top: 135px; right: 70px; }
+#subbtn { position: absolute; top: 120px; right: 10px; }
+#subbtn:focus { outline: none; }
+rect, polygon, circle { z-index: 100; }
+</style>
+<script>
+core.EPISODE_MAX_TIME = 30000;
+shapes.SZ_X = 7;
+shapes.SZ_Y = 6;
+var TOTAL_SHAPES = 5;
+
+var containerX;
+var containerY;
+var containerWidth = 70;
+var containerHeight = 50;
+
+var LEFT_BOX_X = 2;
+var LEFT_BOX_Y = 5;
+
+var RIGHT_BOX_X = 84;
+var RIGHT_BOX_Y = 5;
+
+// user-friendly names.
+var SHAPE_TYPES = ['rectangles', 'circles', 'triangles'];
+// d3 selector names.
+var HTML_TAGS = ['rect:not(#shape-container)', 'circle', 'polygon'];
+
+var genPolygons = function(){
+  var grid = {};
+  grid.shapes = [];
+  var taken_positions = [];
+  for(var i=0;i<TOTAL_SHAPES;i++) {
+
+    // generate properties of a shape
+    while(true) {
+      var x = core.randi(0, shapes.SZ_X);
+      var y = core.randi(3, shapes.SZ_Y);
+      var xystr = x + ',' + y;
+
+      if(containerCoords(x,y)) continue;
+      else if(!taken_positions.hasOwnProperty(xystr)) { // make sure it's not taken yet
+        taken_positions[xystr] = 1;
+        break;
+      }
+    }
+    var color = shapes.COLORS[core.randi(0, shapes.COLORS.length)];
+    var size = 0.7;
+
+    var type = 'shape';
+    var text = shapes.SHAPES[core.randi(0, shapes.SHAPES.length)];
+
+    var shape = {x:x, y:y, color:color, size:size, type:type, text:text}
+    grid.shapes.push(shape)
+  }
+  return grid;
+}
+
+// make sure that the given coords will not generate a shape INSIDE
+// the container/end goal. While we give the user some leniency
+// on shapes that might not fully dragged into the container, we want
+// to be certain that there aren't any shapes that they have to drag
+// out of the container in order to complete the task.
+var containerCoords = function(x,y){
+  var xCoord = x*20;
+  var yCoord = y*20;
+  if (containerX < (xCoord+20) && (containerX+containerWidth) > xCoord
+  && containerY < (yCoord+20) && (containerY + containerHeight) > yCoord) {
+    return true;
+  }
+
+  return false;
+}
+
+var genContainer = function(posX, posY){
+  d3.select('#area_svg')
+    .append('rect')
+    .attr('x', posX)
+    .attr('y', posY)
+    .attr('stroke', 'black')
+    .attr('fill', 'none')
+    .attr('stroke-width', '2')
+    .attr('width', containerWidth)
+    .attr('height', containerHeight)
+    .attr('id', 'shape-container')
+}
+
+var insideContainer = function(shape, posX, posY){
+  var coords =  shapes.gridCoords(shape);
+  // do some minor padding around the border, so that shapes that are mostly inside the container will
+  // still be counted as being fully inside it.
+  var xContained = coords.x > posX  && coords.x < (posX + containerWidth);
+  var yContained = coords.y > posY && coords.y < (posY + containerHeight);
+  return xContained && yContained
+}
+
+var separateByShape = function(grid){
+  var shapeIndex = core.randi(0,SHAPE_TYPES.length);
+  var gtix = core.randi(0, grid.shapes.length);
+  var gtdesc = shapes.generalDesc(grid.shapes[gtix]);
+  d3.select('#query').html('Drag all ' + SHAPE_TYPES[shapeIndex] + ' into the left box, and everything else into the right box.'); // render query
+
+  d3.selectAll('rect:not(#shape-container), circle, polygon').call(shapes.drag);
+
+  d3.select('#subbtn').on('click', function(){
+    var expectedShape = HTML_TAGS[shapeIndex];
+    var otherShapes = HTML_TAGS.slice();
+    otherShapes.splice(shapeIndex, 1);
+
+    var expectedShapesContained = d3.selectAll(expectedShape)[0].map(function(v){
+      return (v===null || insideContainer(v, LEFT_BOX_X, LEFT_BOX_Y)) ? 1.3/TOTAL_SHAPES : -1/TOTAL_SHAPES;
+    }).reduce((a, b) => a + b, 0);
+    var otherShapesOutside = d3.selectAll(otherShapes.join(','))[0].map(function(v){
+      return (v===null || insideContainer(v, RIGHT_BOX_X, RIGHT_BOX_Y)) ? 1.3/TOTAL_SHAPES : -1/TOTAL_SHAPES;
+    }).reduce((a, b) => a + b, 0);
+    var r = expectedShapesContained + otherShapesOutside;
+
+    // ensure reward is bounded by (-1.0, 1.0).
+    r = r < -1.0 ? -1.0 : r;
+    r = r > 1.0 ? 1.0 : r;
+
+    core.endEpisode(r, r>0);
+  });
+}
+
+var separateByColor = function(grid){
+  var shapeIndex = core.randi(0,SHAPE_TYPES.length);
+  var gtix = core.randi(0, grid.shapes.length);
+  var gtdesc = shapes.generalDesc(grid.shapes[gtix]);
+
+  var existingColors = d3.selectAll('svg *')[0].map(function(v){ return v.getAttribute('fill')});
+  existingColors = existingColors.filter(function(v){ return v !== 'none'}).filter(function (item, index, self) {
+        return self.indexOf(item) == index;
+    });;
+
+  var chosenColor = core.sample(existingColors);
+
+  d3.select('#query').html('Drag all ' + chosenColor + ' shapes into the left box, and everything else into the right box.');
+
+  // render query
+  d3.selectAll('rect:not(#shape-container), circle, polygon').call(shapes.drag);
+
+  d3.select('#subbtn').on('click', function(){
+    var chosenColorShapes = d3.selectAll('svg *')[0].filter(function(v){
+      return v.getAttribute('fill') === chosenColor });
+    var allOtherShapes = d3.selectAll('svg *')[0].filter(function(v){
+      return v.getAttribute('fill') !== chosenColor &&  v.getAttribute('fill') !== 'none' });
+
+    // give partial credit for some shapes being in the correct spots,
+    // as opposed to an all-or-nothing type of deal.
+    var specificColorOnLeft = chosenColorShapes.map(function(v){
+      return (v===null ||insideContainer(v, LEFT_BOX_X, LEFT_BOX_Y)) ? 1.3/TOTAL_SHAPES : -1/TOTAL_SHAPES;
+    }).reduce((a, b) => a + b, 0);
+    var allOtherShapesOnRight = allOtherShapes.map(function(v){
+      return (v===null || insideContainer(v, RIGHT_BOX_X, RIGHT_BOX_Y)) ? 1.3/TOTAL_SHAPES : -1/TOTAL_SHAPES;
+    }).reduce((a, b) => a + b, 0);
+    var r = specificColorOnLeft + allOtherShapesOnRight;
+
+    // ensure reward is bounded by (-1.0, 1.0).
+    r = r < -1.0 ? -1.0 : r;
+    r = r > 1.0 ? 1.0 : r;
+
+    core.endEpisode(r, r>0);
+  });
+}
+
+// create a problem instance
+var genProblem = function() {
+  // generate a new random grid of shapes
+  containerX = core.randi(4, 150-containerWidth);
+  containerY = core.randi(4, 120-containerHeight)
+  var grid = genPolygons();
+  var svg_elt = d3.select('#area_svg');
+  shapes.renderGrid(svg_elt, grid); // instantiate the actual SVG shapes
+  genContainer(LEFT_BOX_X, LEFT_BOX_Y);
+  genContainer(RIGHT_BOX_X, RIGHT_BOX_Y);
+
+  if(core.sample([true, false])) separateByShape(grid);
+  else separateByColor(grid);
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query"></div>
+  <div id="area">
+    <svg id="area_svg">
+    </svg>
+    <button id="subbtn" class="secondary-action">Submit</button>
+  </div>
+</div>
+</body>
+</html>

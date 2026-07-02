@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Daily Calendar Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+<script src="../common/ui_utils.js"></script>
+
+<style>
+  #area { height: 156px; overflow-y: scroll; user-select: none; position: relative; }
+  .hour { height: 40px; display: block; width: 140px; border-top: 1px solid #b5b5b5; }
+  .hour .hour-label { height: 40px; width: 20%; display: inline-block; vertical-align: top; }
+  .hour .calendar { height: 40px; width: 78%; display: inline-block; background-color: #f7f7f7; z-index: 1; }
+  .hour .calendar div { height: 49%; }
+  .hour .calendar div:nth-child(2) { border-top: 1px dotted #b5b5b5; }
+
+  #area .event { position: absolute; z-index: 999; display: block; margin-left: 21%; width: 100px;
+    border: 1px solid black; }
+
+  .event.event0 { background-color: #87f776; } /* green */
+  .event.event1 { background-color: #afe4f7; } /* blue */
+  .event.event2 { background-color: #f7afb6; } /* red */
+  .event.event3 { background-color: #f7f2af; } /* yellow*/
+
+  #newEvent { position: absolute; z-index: 999; border: 1px solid black; display: block; margin-left: 21%;
+    width: 100px; background-color: #f4c842; }
+
+  #create-event { background-color: #fff; border: 1px solid #000; position: absolute;
+    padding: 5px; z-index: 1000; height: 70px; margin-left: 5px; overflow: hidden; }
+  #create-event > div { margin-bottom: 5px; }
+  #create-event #controls button { display: inline-block; margin: 2px; width: 55px; }
+  #event-name { z-index: 9999; } /* need this to auto-focus on creation! */
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 20000;
+
+var EVENT_PADDING = 10;
+var HALF_HOUR_HEIGHT = 20; // in pixels
+var CALENDAR_TIMES = [
+  '12am',
+  '1am',
+  '2am',
+  '3am',
+  '4am',
+  '5am',
+  '6am',
+  '7am',
+  '8am',
+  '9am',
+  '10am',
+  '11am',
+  '12pm',
+  '1pm',
+  '2pm',
+  '3pm',
+  '4pm',
+  '5pm',
+  '6pm',
+  '7pm',
+  '8pm',
+  '9pm',
+  '10pm',
+  '11pm',
+];
+
+var PROBLEM_HOURS = [
+  '0.5 hours',
+  '1 hour',
+  '1.5 hours',
+]
+var PROBLEM_MINS = [
+  '30 mins',
+  '60 mins',
+  '90 mins',
+]
+var PROBLEM_ACTIONS = ['Phonecall', 'Food', 'Party', 'Meeting', 'Gym']
+
+var HOUR_TEMPLATE = `
+  <span class="hour-label">
+  </span>
+  <span class="calendar">
+    <div class="half-hour">
+    </div>
+    <div class="half-hour">
+    </div>
+  </span>
+`
+
+var EVENT_NAME_TEMPLATE = `
+  <div>
+    <input id="event-name" type="text" placeholder="Event name">
+  </div>
+  <div>
+      <label id=time-start></label>
+      <label> to </label>
+      <label id=time-end></label>
+  </div>
+  <div id="controls">
+    <span>
+      <button class="cancel">Cancel</button>
+      <button class="create">Create</button>
+    </span>
+  </div>
+`
+
+var isDragging = false;
+
+var drawCalendar = function(){
+  for(var i=0;i<CALENDAR_TIMES.length; i++){
+    drawHour(CALENDAR_TIMES[i], i);
+  }
+}
+
+var drawHour = function(hour, index){
+  var div = document.createElement('div');
+  div.innerHTML = HOUR_TEMPLATE;
+  div.getElementsByClassName('hour-label')[0].innerHTML = hour;
+  div.setAttribute('class', 'hour');
+  div.setAttribute('data-hour', index);
+
+  div.getElementsByClassName('half-hour')[0].setAttribute('id', 'hh-'+(index*2));
+  div.getElementsByClassName('half-hour')[1].setAttribute('id', 'hh-'+(index*2 +1));
+
+  $('#area').append(div);
+}
+
+var renderEvent = function(startingHalfHour, endingHalfHour, divId, userCreatedEvent){
+  if(startingHalfHour === undefined || endingHalfHour === undefined){
+    return;
+  }
+
+  var div = document.createElement('div');
+  div.setAttribute('id', divId);
+  div.setAttribute('class', 'event event' + core.randi(0,3));
+
+  if(divId === 'newEvent'){
+    $('#newEvent').remove();
+    div.innerHTML = 'New event';
+  } else {
+    div.innerHTML = core.sample(PROBLEM_ACTIONS);
+  }
+
+  var startIndex = parseInt(startingHalfHour.split('hh-')[1], 10);
+  var endIndex = parseInt(endingHalfHour.split('hh-')[1], 10) + 1;
+  var duration = endIndex - startIndex;
+  div.setAttribute('data-duration', duration);
+  if(userCreatedEvent){
+    div.setAttribute('data-start', startIndex);
+    div.setAttribute('data-end', endIndex);
+  }
+
+  // additional 0.33333px padding for borders, and flat +2px for padding in #area.
+  var top = startIndex * HALF_HOUR_HEIGHT + (0.42*startIndex) + 4;
+  var height = (endIndex - startIndex) * HALF_HOUR_HEIGHT;
+  if(height > 0 && height < HALF_HOUR_HEIGHT) height = HALF_HOUR_HEIGHT;
+  else if(height ===0) return;
+  else if(height <0){
+    top = endIndex * HALF_HOUR_HEIGHT + (0.42*endIndex) + 4;
+    var height = (startIndex - endIndex) * HALF_HOUR_HEIGHT;
+  }
+  var cssPosition = 'top: ' + top + 'px; height: ' + height + 'px;'
+  div.setAttribute('style', cssPosition);
+  $('#area').append(div);
+  $('#event-name').focus();
+}
+
+var nameNewEvent = function(startIndex, endIndex, expectedAnswer){
+  var div = document.createElement('div');
+  div.innerHTML = EVENT_NAME_TEMPLATE;
+  div.setAttribute('id', 'create-event');
+
+  var startInt = parseInt(startIndex, 10);
+  var endInt = (parseInt(endIndex,10)+1);
+
+  div.getElementsByTagName('label')[0].innerHTML = indexToTime(startInt);
+  div.getElementsByTagName('label')[2].innerHTML = indexToTime(endInt);
+
+  var style = $('#newEvent').attr('style').split(';')[0];
+  div.setAttribute('style', style + ';');
+  $('#area').append(div);
+
+  bindEventButtons(expectedAnswer);
+}
+
+var indexToTime = function(index){
+  var halvedIndex = index/2;
+  var roundedIndex = parseInt(halvedIndex)%CALENDAR_TIMES.length;
+  var decimal = halvedIndex%1;
+
+  if(decimal === 0){ return CALENDAR_TIMES[roundedIndex]}
+  else {
+    var timeRegex = CALENDAR_TIMES[roundedIndex].split(/(am|pm)/gi);
+    return timeRegex[0] + ':30' +  timeRegex[1];
+  }
+}
+
+var bindEventButtons = function(expectedAnswer){
+  $('#controls .cancel').on('click', function(){
+    $('#create-event').remove();
+    $('#newEvent').remove();
+  });
+
+  $('#controls .create').on('click', function(){
+    var eventName = $('#create-event input').val();
+    $('#create-event').remove();
+    $('#newEvent').text(eventName);
+    rewardEpisode(expectedAnswer);
+  });
+}
+
+var renderRandomEvents = function(){
+  var HOURS = [
+    ['hh-12', 'hh-13', 'hh-14', 'hh-15', 'hh-16', 'hh-17', 'hh-18', 'hh-19',], // 6AM - 10AM
+    ['hh-24', 'hh-25', 'hh-26', 'hh-27', 'hh-28', 'hh-29', 'hh-30', 'hh-31',], // 12AM - 4PM
+    ['hh-36', 'hh-37', 'hh-38', 'hh-39', 'hh-40', 'hh-41', 'hh-42', 'hh-43',], // 6PM - 10PM
+  ]
+
+  for(var i=0;i<HOURS.length;i++){
+    var length = HOURS[i].length;
+    var startIndex = core.randi(0, length-1);
+    var endIndex = (startIndex+1) === (length-1) ? (startIndex + 1) : (startIndex + core.sample([1,2]));
+    var eventName = 'randomEvent' + i;
+    renderEvent(HOURS[i][startIndex], HOURS[i][endIndex], eventName);
+  }
+}
+
+var enableEventCreation = function(expectedAnswer){
+
+  var startingHalfHour, endingHalfHour, startIndex, endIndex;
+
+  isDragging = false;
+  $(".half-hour")
+  .mousedown(function(e) {
+    e.preventDefault();
+    startingHalfHour = $(this).attr('id');
+    startIndex = startingHalfHour.split('hh-')[1];
+    if($('#newEvent').length === 0) isDragging = true;
+  })
+  .mousemove(function(e){
+    e.preventDefault();
+    if(isDragging === true){
+      endingHalfHour = $(this).attr('id');
+      renderEvent(startingHalfHour, endingHalfHour, 'newEvent', true);
+
+      // bind the mouseup event to the new event div instead of the half-hour div.
+      $('#newEvent').mouseup(function(e) {
+        e.preventDefault();
+        var wasDragging = isDragging;
+        isDragging = false;
+        if(wasDragging){
+          endIndex = endingHalfHour.split('hh-')[1];
+          nameNewEvent(startIndex, endIndex, expectedAnswer);
+        }
+
+      });
+    }
+  });
+}
+
+var expectedDateWindow = function(){
+  var TIME_WINDOWS = [
+    {
+      display: '8AM and 12PM',
+      startRange: 'hh-16', // inclusive
+      endRange: 'hh-24' // non-inclusive
+    },
+    {
+      display: '12PM and 4PM',
+      startRange: 'hh-24', // inclusive
+      endRange: 'hh-32' // non-inclusive
+    },
+    {
+      display: '4PM and 8PM',
+      startRange: 'hh-32', // inclusive
+      endRange: 'hh-40' // non-inclusive
+    },
+  ]
+
+  var expectedDuration = core.randi(0,3);
+  var durationDisplay = core.sample([PROBLEM_MINS[expectedDuration], PROBLEM_HOURS[expectedDuration]]);
+  var expectedName = core.sample(PROBLEM_ACTIONS);
+
+  var expectedAnswer = core.sample(TIME_WINDOWS);
+  expectedAnswer.name = expectedName;
+  expectedAnswer.duration = expectedDuration + 1;
+
+  $('#query').html('Create a ' + durationDisplay + ' event named "' +
+    expectedAnswer.name + '", between ' + expectedAnswer.display  + '.')
+
+  return expectedAnswer;
+}
+
+var eventsOverlap = function(){
+  var $createdEvent = $('#newEvent');
+  var createdTop = parseInt($createdEvent.css('top'), 10);
+  var createdHeight = parseInt($createdEvent.css('height'), 10);
+
+  var createdStart  = parseInt($createdEvent.attr('data-start'), 10);
+  var createdDuration = parseInt($createdEvent.attr('data-duration'), 10);
+
+  var events = $('.event').not('#newEvent');
+  for(var i=0;i<events.length;i++){
+    var $event = $(events[i]);
+    var eventStart = parseInt($event.attr('data-start'), 10);
+    var eventDuration = parseInt($event.attr('data-duration'), 10);
+
+    var topOverlap = createdStart >= eventStart && createdStart <= (eventStart + eventDuration);
+    var bottomOverlap = (createdStart + createdDuration) >= eventStart && (createdStart + createdDuration) <= (eventStart + eventDuration);
+
+    // check top of created event
+    if(topOverlap) return true;
+    // check bottom of created event
+    else if(bottomOverlap) return true;
+  }
+
+  return false;
+}
+
+var durationMatches = function(expectedDuration, createdDuration){
+  var diff = Math.abs(createdDuration-expectedDuration)/expectedDuration;
+  if(diff > 0.03) return false;
+  return true
+}
+
+var correctEventWindow = function(expectedAnswer){
+  var $event = $('#newEvent')
+  var eventDuration = parseInt($event.attr('data-duration'), 10);
+  var eventStart = parseInt($event.attr('data-start'), 10);
+
+  var startRange = parseInt(expectedAnswer.startRange.split('hh-')[1], 10);
+  var endRange = parseInt(expectedAnswer.endRange.split('hh-')[1], 10);
+  // check duration
+  if(eventDuration !== expectedAnswer.duration) return false;
+  // ensure event starts after expected start time
+  else if(startRange > (eventStart + eventDuration)) return false;
+  // ensure event ends before expected start time. pad by 5px just in case.
+  else if(endRange < (eventStart + eventDuration)) return false;
+
+  return true;
+}
+
+var rewardEpisode = function(expectedAnswer){
+  var eventName = $('#newEvent').text();
+  if(expectedAnswer.name.toLowerCase() !== eventName.toLowerCase()) core.endEpisode(-1.0);
+  else if(eventsOverlap()) core.endEpisode(-1.0);
+  else if(!correctEventWindow(expectedAnswer)) core.endEpisode(-1.0);
+
+  core.endEpisode(1.0, true);
+}
+
+var genProblem = function() {
+  $('#area').empty().scrollTop(0);
+
+  drawCalendar();
+  renderRandomEvents();
+
+  var expectedAnswer = expectedDateWindow()
+
+  enableEventCreation(expectedAnswer);
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Create a 1 hour event.</div>
+  <div id="area">
+  </div>
+</div>
+</body>
+</html>

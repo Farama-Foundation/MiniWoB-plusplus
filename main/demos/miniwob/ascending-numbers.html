@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ascending Numbers Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/d3.v3.min.js"></script>
+<script src="../common/shapes.js"></script>
+
+<style>
+#area_svg { width: 160px; height: 160px; }
+#highlight {  }
+.highlight-green { fill: green; }
+.highlight-red { fill: red; }
+.highlight-blue { fill: blue; }
+</style>
+<script>
+core.EPISODE_MAX_TIME = 10000;
+var TOTAL_RECTS = 5;
+var QUERY_PADDING = 50;
+var MARGIN_PADDING = 5;
+
+var rectOverlap = function(rect1, rect2){
+  var PADDING = 15;
+  var o1 = (rect1.right + PADDING) < rect2.left;
+  var o2 = rect1.left > (rect2.right + PADDING);
+  var o3 = (rect1.bottom + PADDING) < rect2.top;
+  var o4 = rect1.top > (rect2.bottom + PADDING);
+
+  var overlap = !(o1 || o2 || o3 || o4);
+  return overlap;
+}
+
+var hideNumberText = function(){
+  var nums = d3.selectAll('svg text')[0];
+  for(var i=0;i<nums.length;i++){
+    var num = nums[i];
+    var pos = num.getBoundingClientRect();
+    d3.select('svg')
+      .append('rect')
+      .attr('class', 'rect')
+      .attr('x', pos.left - MARGIN_PADDING)
+      .attr('y', pos.top - QUERY_PADDING)
+      .attr('width', 20)
+      .attr('height', 20)
+      .attr('data-index', i+1);
+  }
+
+  d3.selectAll('svg text').remove();
+  d3.select('svg rect').remove(); // remove first rect
+  d3.selectAll('svg rect').on('click', function(){
+    var rectIndex = this.getAttribute('data-index');
+    var firstRect = d3.select('svg rect')[0][0].getAttribute('data-index');
+    var remainingNumbers = d3.selectAll('svg rect')[0].length;
+    if(rectIndex === firstRect && remainingNumbers !== 1){
+      d3.select(this).remove();
+    } else if(rectIndex === firstRect && remainingNumbers === 1){
+      core.endEpisode(1.0, true);
+    } else {
+      var diff = TOTAL_RECTS - remainingNumbers;
+      var reward = diff/TOTAL_RECTS;
+      core.endEpisode(reward, true);
+    }
+  });
+}
+
+// create a problem instance
+var genProblem = function() {
+  d3.selectAll('svg > *').remove();
+  var svg =  d3.select('svg');
+
+  var shapeSize = core.randi(15,25);
+  // generate a new random grid of shapes
+  var renderedShapes = 0;
+  while(renderedShapes < TOTAL_RECTS){
+    var x = Math.random() * 100 + 20;
+    var y = Math.random() * 100 + 20;
+    var pos = {x:x, y:y};
+
+    svg
+      .append('text')
+      .attr('class', 'text')
+      .text(renderedShapes+1)
+      .attr('x', x)
+      .attr('y', y)
+      .attr('font-size', 20);
+
+    var currentSquares = d3.selectAll('svg text')[0];
+    var lastDrawn = currentSquares[currentSquares.length-1];
+    var overlap;
+    for(var s=0;s<currentSquares.length-1;s++){
+      overlap = rectOverlap(currentSquares[s].getBoundingClientRect(), lastDrawn.getBoundingClientRect());
+      if(overlap) break;
+    }
+
+    if(overlap) {
+      lastDrawn.remove();
+      continue;
+    } else renderedShapes++;
+  }
+
+  missedFrames = 0;
+  exitTime = new Date().getTime();
+
+  d3.selectAll('svg text').on('click', function(){
+    if(this.innerHTML !== '1'){
+      core.endEpisode(-1.0);
+    } else {
+      hideNumberText();
+    }
+  });
+
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Click on the numbers in ascending order.</div>
+  <div id="area">
+    <svg id="area_svg"></svg>
+  </div>
+</div>
+</body>
+</html>

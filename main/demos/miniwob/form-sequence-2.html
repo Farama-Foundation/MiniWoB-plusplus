@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Form Sequence Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<link rel="stylesheet" href="../core/jquery-ui/jquery-ui.min.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+<script src="../core/jquery-ui/jquery-ui.min.js"></script>
+<script src="../common/ui_utils.js"></script>
+
+<style>
+#area > div { margin: 10px 2px; }
+#subbtn { height: 40px; }
+#area input[type=text] { width: 30px; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 10000;
+var POS_TEXT = [
+  '',
+  '1st',
+  '2nd',
+  '3rd',
+];
+
+var correctTextbox = function(expectedNum, expectedTextbox){
+
+  for(var i=1;i<4;i++){
+    var $checkbox = $('#input-' + i);
+    if(i === expectedTextbox && $checkbox.val() !== expectedNum.toString()){
+      return false;
+    } else if(i !== expectedTextbox && $checkbox.val() !== ''){
+      return false;
+    }
+  }
+  return true;
+}
+
+var genProblem = function() {
+  $('#area input[type=radio]').attr('checked', false);
+  $('#area input[type=text]').val('');
+
+  var expectedRadio = core.randi(1,4);
+  var expectedNum = core.randi(-10,51);
+  var expectedTextbox = core.randi(1,4);
+
+  var problem = 'Check the ' + POS_TEXT[expectedRadio] + ' radio button and enter the number "' +
+    expectedNum + '" into the ' + POS_TEXT[expectedTextbox] + ' textbox.';
+  $('#query').html(problem);
+
+  $('#subbtn').unbind('click');
+  $('#subbtn').on('click', function(){
+    var checkedRadio = parseInt($('input[type=radio]:checked').val(), 10);
+    var r = (checkedRadio && correctTextbox(expectedNum, expectedTextbox)) ? 1.0 : -1.0;
+    core.endEpisode(r, r>0);
+  });
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query"></div>
+  <div id="area">
+    <div>
+      <input type="radio" name="radio" value="1">
+      <input type="radio" name="radio" value="2">
+      <input type="radio" name="radio" value="3">
+    </div>
+    <div>
+     <input type="text" id="input-1">
+     <input type="text" id="input-2">
+     <input type="text" id="input-3">
+    </div>
+    <div>
+      <button id="subbtn" class="secondary-action">Submit</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

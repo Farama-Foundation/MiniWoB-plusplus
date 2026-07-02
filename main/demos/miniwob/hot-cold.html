@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hot Cold Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+
+<style>
+#touch-area { height: 125px; width: 154px; border: 1px solid black; }
+#display { height: 25px; width: 160px; text-align: center; }
+#signal { font-weight: bold; font-size: 20px; }
+
+.hot { color: #af0516; }
+.warm { color: #ff7e2d; }
+.cold { color: #00d8ff; }
+.ice-cold { color: #0a4bff; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 15000;
+var X_DIM = 160;
+var Y_DIM = 125;
+var QUERY_HEIGHT = 50;
+
+var findDistance = function(x1,y1, x2,y2){
+  var xDiff = (x2-x1)*(x2-x1);
+  var yDiff = (y2-y1)*(y2-y1);
+  return Math.sqrt(xDiff + yDiff);
+}
+
+var displayText = function(x1,y1, x2, y2){
+  var distance = findDistance(x1,y1, x2,y2);
+  var txt;
+  if(distance < 5){
+    return {txt: 'HOT', class: 'hot'};
+  } else if(distance < 10){
+    return {txt: 'WARM', class: 'warm'};
+  } else if (distance < 40){
+    return {txt: 'COLD', class: 'cold'};
+  } else {
+    return {txt: 'ICE COLD', class: 'ice-cold'};
+  }
+
+  return txt;
+}
+
+var determineScore = function(x1,y1, x2, y2){
+  var distance = findDistance(x1,y1, x2,y2);
+  if(distance < 5){
+    return 1.0;
+  } else if(distance < 10){
+    return 0.5;
+  } else if (distance < 40){
+    return 0.25;
+  } else {
+    return -1.0;
+  }
+}
+
+var genProblem = function() {
+  var randX = core.randi(5, X_DIM-5);
+  var randY = core.randi(5, Y_DIM-5);
+  $('#touch-area, #display').unbind('click');
+
+
+  $('#touch-area').on('mousemove', function(e){
+    var currX = e.pageX;
+    var currY = e.pageY - QUERY_HEIGHT;
+    var textSignal = displayText(randX, randY, currX, currY);
+    $('#display').html('<div id="signal" class="' + textSignal.class + '">' + textSignal.txt + '</div>');
+  });
+
+
+  $('#touch-area').on('click', function(e){
+    var currX = e.pageX;
+    var currY = e.pageY - QUERY_HEIGHT;
+    var reward = determineScore(randX, randY, currX, currY);
+    $('#display').html('');
+    core.endEpisode(reward, reward > 0);
+  });
+
+  $('#display').on('click', function(){
+    $('#display').html('');
+    core.endEpisode(-1.0);
+  });
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Find and click on the HOT area.</div>
+  <div id="area">
+    <div id="touch-area">
+    </div>
+    <div id="display"></div>
+  </div>
+</div>
+</body>
+</html>

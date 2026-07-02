@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Form Sequence Task</title>
+<!-- IMPORTANT: we're using the jQuery selectric dropdown
+because there seems to be some issues with Chrome rendering
+dropdowns in the docker container. -->
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<link rel="stylesheet" href="../core/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="../common/special/dropdown/selectric.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+<script src="../common/special/dropdown/jquery.selectric.js"></script>
+<script src="../common/ui_utils.js"></script>
+
+<style>
+#area > div { margin: 10px 2px; }
+#subbtn { height: 40px; }
+
+#dropdown-container { text-align: center; }
+
+#buttons { text-align: center; }
+#buttons button { margin: 2px 1px; height: 25px; line-height: top; vertical-align: top; }
+.selectric-wrapper { margin: 0 auto; width: 80px; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 10000;
+
+var SELECT_OPTS = [
+  '',
+  '5ft 9in',
+  '5ft 10in',
+  '5ft 11in',
+  '6 ft',
+  '6ft 1in',
+  '6ft 2in',
+];
+
+var BUTTONS = [
+  'Yes',
+  'No',
+  'Maybe',
+]
+
+var generateSelectDropdown = function(){
+  for(var i=0;i<SELECT_OPTS.length;i++){
+    $('#dropdown').append('<option>'+SELECT_OPTS[i]+'</option');
+  }
+}
+
+var genProblem = function() {
+  $('#dropdown').empty();
+  $('#buttons button').unbind('click');
+
+  generateSelectDropdown();
+  var expectedDropdown = core.sample(SELECT_OPTS.slice(1, -1)); // ignore first option since it's blank.
+  var expectedButton = core.sample(BUTTONS);
+
+  $('#query').html('Choose ' + expectedDropdown + ' from the dropdown, then click the button labeled "' + expectedButton + '".');
+
+  $('select').selectric({
+    inheritOriginalWidth: false,
+    width: 150,
+    maxHeight: 100,
+  });
+
+  $('#buttons button').on('click', function(){
+    var chosenDropdown = $('#dropdown').val();
+    var clickedButton = $(this).text();
+
+    if(expectedDropdown === chosenDropdown && expectedButton === clickedButton)core.endEpisode(1.0, true);
+    else core.endEpisode(-1.0);
+  });
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query"></div>
+  <div id="area">
+    <div id="dropdown-container">
+      <select id="dropdown">
+      </select>
+    </div>
+    <div id="buttons">
+      <button id="yes" class="secondary-action">Yes</button>
+      <button id="no" class="secondary-action">No</button>
+      <button id="maybe" class="secondary-action">Maybe</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

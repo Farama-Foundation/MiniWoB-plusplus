@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Odd Or Even Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<link rel="stylesheet" href="../core/jquery-ui/jquery-ui.min.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+<script src="../common/ui_utils.js"></script>
+
+<style>
+#area { margin: 0px 5px; }
+#area button { padding: 5px 8px; }
+#area button:focus { outline: none; }
+
+#numbers .row { display: block; width: 150px; margin: 5px; overflow: hidden; }
+
+#numbers .selected { color: #4286f4; padding: 4px 8px; }
+#numbers span { display: inline-block; float: left; width: 30%; }
+#numbers .middle { text-align: center; font-size: 20px; font-weight: bold; font-weight: bold; }
+
+#form { width: 140px; text-align: center; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 15000;
+var RANDOM_NUMBERS = 3;
+
+var TASK_TEMPLATE = `
+  <div id="numbers"></div>
+  <div id="form"><button id="submit">Submit</button></div>
+`
+
+var NUMBER_TEMPLATE = `
+  <div class="row">
+    <span class="left">
+      <button class="odd">Odd</button>
+    </span>
+    <span class="middle">
+      <div class="display-number"></div>
+    </span>
+    <span class="right">
+      <button class="even">Even</button>
+    </span>
+  </div>
+`
+
+var isOddNumber = function(number){
+  return (number%2 === 1) || (number%2 === -1);
+};
+
+var shiftButtons = function(){
+  $('#controls').attr('style', 'margin-top: ' + core.randi(-15,30) + 'px; margin-left: ' +  + core.randi(-25,25) + 'px');
+};
+
+var generateNumbers = function(totalNums){
+  for(var i=0;i<totalNums;i++){
+    $('#numbers').append(NUMBER_TEMPLATE);
+    var number = core.randi(-5,11);
+    $('.display-number').last().text(number);
+  }
+}
+
+var genProblem = function() {
+  // reset the UI
+  $('#area').html(TASK_TEMPLATE);
+
+
+  $('#query').html('Mark the numbers below as odd or even and press submit when done.')
+
+  generateNumbers(RANDOM_NUMBERS);
+
+
+  $('.odd, .even').on('click', function(){
+    $(this).parents('.row').find('.odd, .even').removeClass('selected');
+    $(this).addClass('selected');
+  });
+  $('#submit').on('click', function(){
+    var reward = 0;
+    for(var i=0;i<RANDOM_NUMBERS;i++){
+      var elem = $('.row')[i];
+      var numText = $(elem).find('.display-number').text();
+      var num = parseInt(numText, 10);
+
+      var oddNumber = isOddNumber(num);
+      var selected = $(elem).find('button.selected');
+
+      if(selected && selected.text() == 'Odd' && oddNumber) reward += 1/RANDOM_NUMBERS;
+      else if(selected && selected.text() == 'Even' && !oddNumber) reward += 1/RANDOM_NUMBERS;
+      else if(selected) reward -= 1/RANDOM_NUMBERS;
+      else reward -= 0.25/RANDOM_NUMBERS;
+    }
+
+    core.endEpisode(reward, reward > 0);
+  });
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query"></div>
+  <div id="area"></div>
+</div>
+</body>
+</html>

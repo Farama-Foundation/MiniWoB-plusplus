@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sign Agreement Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<link rel="stylesheet" href="../core/jquery-ui/jquery-ui.min.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+<script src="../common/ui_utils.js"></script>
+
+<style>
+#area { margin: 1px; }
+#area h2 { font-size: 10px; margin: 0px 1px; }
+#area #text-area { height: 70px; width: 140px; }
+#area input { margin: 1px; }
+#area button { display: inline-block; margin: 2px; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 10000;
+var HEIGHT = 85;
+var TEMPLATE = `
+  <h2>User agreement</h2>
+  <textarea id="text-area" disabled></textarea>
+  <input type="text" id="name" placeholder="Name" disabled>
+  <button id="cancel">Cancel</button>
+  <button id="agree" disabled>Agree</button>
+`
+
+var generateScroll = function(){
+  document.getElementById('text-area').scrollTop = 0; // scroll up the text area
+
+
+  var txt = ui_utils.generateWords(150,300);
+  var words = txt.split(/[\s]/g);
+  var expectedWord = words[words.length-1].replace('.', '');
+  $('#text-area').html(txt);
+
+  $('#text-area').on('scroll', function(){
+    if (this.scrollHeight <= (this.scrollTop+HEIGHT+10)) {
+        $('button, input').removeAttr('disabled');
+    }
+  });
+}
+
+var clickCancel = function(){
+  $('#query').html('Click the cancel button.');
+  $('#cancel').on('click', function(){ core.endEpisode(1.0, true); });
+  $('#agree').on('click', function(){ core.endEpisode(-1.0, false); });
+}
+
+var signAndAgree = function(){
+  var expectedName = core.sample(ui_utils.FIFTY_NAMES);
+  $('#query').html('Scroll to the bottom of the textarea, enter the name "' + expectedName +'" then press "Agree"');
+
+  $('#cancel').on('click', function(){ core.endEpisode(-1.0, false); });
+  $('#agree').on('click', function(){
+    var userName = $('#name').val();
+    var reward = expectedName === userName ? 1.0 : -1.0;
+    core.endEpisode(reward, reward > 0);
+  });
+}
+
+var signAndCancel = function(){
+  var expectedName = core.sample(ui_utils.FIFTY_NAMES);
+  $('#query').html('Scroll to the bottom of the textarea, enter the name "' + expectedName +'" then press "Cancel"');
+
+  $('#agree').on('click', function(){ core.endEpisode(-1.0, false); });
+  $('#cancel').on('click', function(){
+    var userName = $('#name').val();
+    var reward = expectedName === userName ? 1.0 : -1.0;
+    core.endEpisode(reward, reward > 0);
+  });
+}
+
+var genProblem = function() {
+ // reset the UI
+  $('#area').html(TEMPLATE);
+
+  generateScroll();
+
+  var problemType = core.randi(0,3);
+  if(problemType === 0){
+    clickCancel();
+  } else if(problemType === 1){
+    signAndAgree();
+  } else if(problemType === 2){
+    signAndCancel();
+  }
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query"></div>
+  <div id="area"></div>
+</div>
+</body>
+</html>

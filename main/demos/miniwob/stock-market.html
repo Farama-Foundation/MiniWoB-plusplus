@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Stock Market Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/d3.v3.min.js"></script>
+<script src="../common/shapes.js"></script>
+
+<style>
+#subbtn { width: 40px; height: 40px; }
+#area svg, #area > div { margin-left: 10px; }
+#area svg { height: 40px; width: 100px; margin: 2px;
+  transform-origin: 50% 50%;transform: scale(1,-1); }
+#area div > label { font-weight: bold; font-size: 12px; }
+#area div > span { font-weight: bold; font-size: 12px; }
+
+#controls { width: 80%; text-align: center; margin-top: 10px; }
+#buy { padding: 5px 13px; }
+#buy:focus { outline: none; }
+</style>
+
+<script>
+var priceIndex = 0;
+var timer;
+
+
+var generatePrices = function(){
+  var STARTING_PRICE = core.randi(40,60);
+  var prices = [STARTING_PRICE];
+
+  var currentPrice = STARTING_PRICE;
+  while(prices.length < 100){
+    var newPrice = currentPrice + core.randi(-15,16)/10.0;
+    newPrice = +newPrice.toFixed(2);
+    newPrice = newPrice < 0.01 ? 0.01 : newPrice;
+    prices.push(newPrice);
+    currentPrice = newPrice;
+  }
+
+  return prices;
+}
+
+var drawPrices = function(prices){
+  drawPrice(prices[priceIndex], priceIndex);
+  priceIndex++;
+}
+
+var drawPrice = function(price, ticker){
+  var svg = d3.select('svg');
+  var generatedCircles = [];
+  generatedCircles.push({ cx: ticker, cy: price-35, r: 0.5, stroke: 'red', fill: 'red',
+    class: 'plot-point', });
+
+  // do not draw on the graph for now.
+  shapes.drawCircles(generatedCircles, svg);
+  d3.select('#stock-price')[0][0].innerHTML = displayPrice(price);
+
+}
+
+var displayPrice = function(price){
+  if(Math.round(price) === price) return "$" + price + ".00";
+  else return "$" + price + "0"
+}
+
+var nasdaqSymbol = function(){
+    var text = "";
+    var charset = "abcdefghijklmnopqrstuvwxyz";
+    for(var i=0;i < 3;i++)
+      text += charset.charAt(Math.floor(Math.random() * charset.length));
+
+    return text;
+}
+
+var genProblem = function() {
+  clearInterval(timer);
+  priceIndex = 0;
+
+  var svg = d3.select('svg');
+  svg.selectAll('*').remove();
+
+  var stockSymbol = nasdaqSymbol().toUpperCase();
+
+  d3.select('#stock-symbol')[0][0].innerHTML = stockSymbol;
+  var prices = generatePrices();
+  timer = setInterval(function(){drawPrices(prices)}, 100);
+
+  var thresholdPrice = prices[75];
+  var displayThreshold = displayPrice(thresholdPrice);
+
+  var queryText = 'Buy ' + stockSymbol + ' stock when the price is less than ' + displayThreshold + '.';
+  d3.select('#query')[0][0].innerHTML = queryText;
+
+  var btn = d3.select('#buy');
+  btn.on('click', function(){
+    var priceText = d3.select('#stock-price')[0][0].innerHTML;
+    var currentPrice = parseFloat(priceText.split('$')[1],10);
+    if(currentPrice <= thresholdPrice) core.endEpisode(1.0, true);
+    else core.endEpisode(-1.0);
+  });
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Click the button.</div>
+  <div id="area">
+    <svg></svg>
+    <div>
+      <div>
+        <label>Company:</label>
+        <span id='stock-symbol'></span>
+      </div>
+      <div>
+        <label>Stock price:</label>
+        <span id='stock-price'></span>
+      </div>
+      <div id='controls'>
+        <button id='buy'>Buy</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

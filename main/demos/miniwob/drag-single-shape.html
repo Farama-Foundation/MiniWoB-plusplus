@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Drag Single Shape Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/d3.v3.min.js"></script>
+<script src="../common/shapes.js"></script>
+<style>
+#area svg { height: 120px; width: 160px; }
+#area svg circle:hover { cursor: pointer; }
+#subbtn { margin-left: 30px; margin-top: -5px; }
+</style>
+
+<script>
+var DIRECTIONS = ['left', 'right', 'up', 'down'];
+
+var createRandomShape = function(svg){
+  var shape = core.sample(['triangle', 'circle', 'rectangle'])
+
+  if(shape === 'triangle') createTriangle(svg);
+  else if(shape === 'circle') createCircle(svg);
+  else if (shape === 'rectangle') createRectangle(svg);
+  // change circle color for additional variation.
+  var circleColor = core.sample(['blue', 'red', 'black', 'green', 'yellow', 'orange', 'white']);
+}
+
+var createCircle = function(svg){
+  // create the circle
+  var circleRadius = core.randi(13,20);
+  // change circle color for additional variation.
+  var circleColor = core.sample(['blue', 'red', 'black', 'green', 'yellow', 'orange', 'white', 'brown']);
+  var generatedCircle = { cx: core.randi(20+circleRadius,120-circleRadius), cy: core.randi(20+circleRadius,
+    100-circleRadius), r: circleRadius, stroke: 'black', fill: circleColor, class: 'black-shape' };
+  shapes.drawCircles([ generatedCircle ], svg);
+  d3.selectAll('circle').call(shapes.drag);
+}
+
+var createRectangle = function(svg){
+  // create the rectangle size
+  var rectangleSize = core.randi(25,40);
+  // change circle color for additional variation.
+  var rectangleColor = core.sample(['blue', 'red', 'black', 'green', 'yellow', 'orange', 'white', 'cyan']);
+  var generatedRectangle = { x: core.randi(20+rectangleSize,120-rectangleSize), y: core.randi(20+rectangleSize,
+    100-rectangleSize), w: rectangleSize, h: rectangleSize, stroke: 'black', fill: rectangleColor, class: 'black-shape' };
+  shapes.drawRectangles([ generatedRectangle ], svg);
+  d3.selectAll('rect').call(shapes.drag);
+}
+
+var createTriangle = function(svg){
+  // create the rectangle size
+  var triangleSize = core.randi(22,35);
+  // change circle color for additional variation.
+  var triangleColor = core.sample(['blue', 'red', 'black', 'green', 'yellow', 'orange', 'white', 'purple']);
+  var generatedTriangle = { x: core.randi(20+triangleSize,120-triangleSize), y: core.randi(20+triangleSize,
+    100-triangleSize), size: triangleSize, stroke: 'black', fill: triangleColor, class: 'black-shape' };
+  shapes.drawTriangles([ generatedTriangle ], svg);
+  d3.selectAll('polygon').call(shapes.drag);
+}
+
+
+var bindClickEvent = function(expectedDirection){
+  // get the current and initial coords of the circle and reward
+  // agent based on directive
+  d3.select('#subbtn').on('click', function(){
+    var currentCircle = d3.select('.black-shape')[0][0];
+    var currentCoords = shapes.gridCoords(currentCircle);
+    var initialCoords = currentCircle.getBBox();
+
+    var dragged = false;
+    if(expectedDirection === 'up' && currentCoords.y < initialCoords.y) dragged = true;
+    else if(expectedDirection === 'down' && currentCoords.y > initialCoords.y) dragged = true;
+    else if(expectedDirection === 'left' && currentCoords.x < initialCoords.x) dragged = true;
+    else if(expectedDirection === 'right' && currentCoords.x > initialCoords.x) dragged = true;
+
+    var r = dragged ? 1.0 : -1.0;
+    core.endEpisode(r, r>0);
+  });
+}
+
+var genProblem = function() {
+  // clear the UI.
+  var svg = d3.select('svg');
+  svg.selectAll('*').remove();
+
+  var expectedDirection = core.sample(DIRECTIONS);
+  d3.select('#query').html('Drag the item ' +  expectedDirection + ' then press Submit.');
+
+  createRandomShape(svg);
+  bindClickEvent(expectedDirection);
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Click the button.</div>
+  <div id="area">
+    <svg></svg>
+    <button id="subbtn" class="secondary-action">Submit</button>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Generate Number Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/jquery-ui/external/jquery/jquery.js"></script>
+
+<style>
+#display-number { height: 50px; text-align: center; font-size: 30px; vertical-align: middle; margin-top: 30px; }
+#controls { text-align: center; }
+#controls button { padding: 6px; margin: 2px 6px; }
+</style>
+
+<script>
+core.EPISODE_MAX_TIME = 15000;
+var displayProblem = function(problemType){
+  var text;
+  var reqs = {};
+  if(problemType === 0) {
+    reqs.lessThan = core.randi(5,9);
+    text = "Generate a number less than " + reqs.lessThan + ", then press submit.";
+  } else if (problemType === 1){
+    reqs.greaterThan = core.randi(2,6);
+    text = "Generate a number greater than " + reqs.greaterThan + ", then press submit.";
+  } else if (problemType === 2){
+    reqs.odd = true;
+    text = "Generate an odd number, then press submit.";
+  } else if (problemType === 3){
+    reqs.even = true;
+    text = "Generate an even number, then press submit.";
+  }
+
+  $('#query').html(text);
+  return reqs;
+}
+
+var isOddNumber = function(number){
+  return (number%2 === 1) || (number%2 === -1);
+};
+
+var determineReward = function(userNumber, problemType, reqs){
+  var reward;
+  if(userNumber === undefined) reward = -1.0;
+
+  if(problemType === 0) {
+    reward = userNumber < reqs.lessThan ? 1.0 : -1.0;
+  } else if (problemType === 1){
+    reward = userNumber > reqs.greaterThan ? 1.0 : -1.0;
+  } else if (problemType === 2){
+    reward = isOddNumber(userNumber) ? 1.0 : -1.0;
+  } else if (problemType === 3){
+    reward = !isOddNumber(userNumber) ? 1.0 : -1.0;
+  }
+
+  return reward;
+}
+
+var genProblem = function() {
+  $('button').unbind('click');
+  $('#display-number').text('-');
+
+  var problemType = core.randi(0,4);
+  var generatedNumber = undefined;
+
+  var reqs = displayProblem(problemType);
+
+  $('#generate').on('click',function(){
+    generatedNumber = core.randi(0,11);
+    $('#display-number').text(generatedNumber);
+  });
+
+  $('#submit').on('click' ,function(){
+    var reward = determineReward(generatedNumber, problemType, reqs);
+    core.endEpisode(reward, reward>0);
+  });
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query"></div>
+  <div id="area">
+    <div id="display-number"></div>
+    <div id="controls">
+      <button id="generate">Generate</button>
+      <button id="submit">Submit</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

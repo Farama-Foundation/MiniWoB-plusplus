@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hover Shape Task</title>
+<!-- stylesheets -->
+<link rel="stylesheet" type="text/css" href="../core/core.css">
+<!-- JS -->
+<script src="../core/core.js"></script>
+<script src="../core/d3.v3.min.js"></script>
+<script src="../common/shapes.js"></script>
+
+<style>
+#area_svg { width: 160px; height: 160px; }
+#highlight {  }
+.highlight-green { fill: green; }
+.highlight-red { fill: red; }
+.highlight-blue { fill: blue; }
+</style>
+<script>
+var exitTime = null;
+var rewardInterval = null;
+var highlightInterval = null;
+var missedFrames = 0;
+var MAX_TRANSLATES = 4;
+var FREQUENCY = 33; // display a score every 33 ms.
+
+var HIGHLIGHTS = [
+  'highlight-green',
+  'highlight-blue',
+  'highlight-red',
+];
+
+var scoreEmitter = function(totalFrames){
+  if(exitTime !== null) {
+    missedFrames += new Date().getTime() - exitTime;
+    exitTime = null;
+  }
+
+  if(d3.select('#highlight')[0][0].getAttribute('data-hover') === null){
+    exitTime = new Date().getTime();
+  }
+
+  var score = missedFrames > totalFrames ? -1.00 : (totalFrames - missedFrames*2)/totalFrames;
+  missedFrames = 0;
+  // TODO: Convert to the normal reward.
+  // core.continuousReward(score);
+}
+
+var rectOverlap = function(rect1, rect2){
+  var o1 = (rect1.right + 5) < rect2.left;
+  var o2 = rect1.left > (rect2.right + 5);
+  var o3 = (rect1.bottom + 5) < rect2.top;
+  var o4 = rect1.top > (rect2.bottom + 5);
+
+  var overlap = !(o1 || o2 || o3 || o4);
+  return overlap;
+}
+
+var highlightSquare = function(highlightColor){
+  var chosenSquare = core.randi(0,5);
+  var rects = d3.selectAll('rect')[0];
+  for(var i=0;i<rects.length;i++){
+    if(i == chosenSquare && rects[i].getAttribute('id') === 'highlight'){
+    } else if(i == chosenSquare){
+      rects[i].setAttribute('id', 'highlight');
+      d3.select(rects[i]).classed(highlightColor, true);
+      exitTime = new Date().getTime();
+    } else {
+      rects[i].removeAttribute('id');
+      rects[i].removeAttribute('data-hover');
+      d3.select(rects[i]).classed(highlightColor, false);
+      missedFrames += new Date().getTime() - exitTime;
+      exitTime = new Date().getTime();
+    }
+  }
+};
+
+// create a problem instance
+var genProblem = function() {
+  d3.selectAll('svg > *').remove();
+  var svg =  d3.select('svg');
+
+  var shapeSize = core.randi(15,25);
+  // generate a new random grid of shapes
+  var renderedShapes = 0;
+  while(renderedShapes < 5){
+    var x = Math.random() * 100 + 20;
+    var y = Math.random() * 100 + 20;
+    var pos = {x:x, y:y};
+
+    svg
+      .append('rect')
+      .attr('class', 'rect')
+      .attr('x', x)
+      .attr('y', y)
+      .attr('width', shapeSize)
+      .attr('height', shapeSize);
+
+    var currentSquares = d3.selectAll('rect')[0];
+    var lastDrawn = currentSquares[currentSquares.length-1];
+    var overlap;
+    for(var s=0;s<currentSquares.length-1;s++){
+      overlap = rectOverlap(currentSquares[s].getBoundingClientRect(), lastDrawn.getBoundingClientRect());
+      if(overlap) break;
+    }
+
+    if(overlap) {
+      lastDrawn.remove();
+      continue;
+    } else renderedShapes++;
+  }
+
+  missedFrames = 0;
+  exitTime = new Date().getTime();
+
+  d3.selectAll('rect').on('mouseleave', function(){
+    if(this.getAttribute('id') === 'highlight'){
+      exitTime = new Date().getTime();
+      this.removeAttribute('data-hover');
+    }
+  });
+  d3.selectAll('rect').on('mouseenter', function(){
+    if(this.getAttribute('id') === 'highlight'){
+      this.setAttribute('data-hover', 'true');
+      missedFrames += new Date().getTime() - exitTime;
+      exitTime = null;
+    }
+  });
+
+  window.clearInterval(rewardInterval);
+  rewardInterval = setInterval(function(){scoreEmitter(FREQUENCY)}, FREQUENCY);
+
+  var highlightColor = core.sample(HIGHLIGHTS);
+  highlightSquare(highlightColor);
+  window.clearInterval(highlightInterval);
+  highlightInterval = setInterval(function(){
+    highlightSquare(highlightColor);
+  }, 2000);
+
+}
+
+window.onload = function() {
+  core.startEpisode();
+}
+</script>
+</head>
+<body>
+<div id="wrap">
+  <div id="query">Keep the mouse hovered over the colored square.</div>
+  <div id="area">
+    <svg id="area_svg"></svg>
+  </div>
+</div>
+</body>
+</html>
