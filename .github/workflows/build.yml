@@ -18,4 +18,7 @@ jobs:
              --build-arg PYTHON_VERSION=${{ matrix.python-version }} \
              --tag miniwob-plusplus-docker .
       - name: Run tests
-        run: docker run --shm-size=256m miniwob-plusplus-docker pytest -n logical -v --timeout=20 tests/test_api.py && pytest --ignore=tests/test_api.py tests/
+        run: |
+            docker run --shm-size=256m miniwob-plusplus-docker \
+              sh -c 'pytest -n logical -v --timeout=20 tests/test_api.py &&
+                     pytest -v --timeout=20 --ignore=tests/test_api.py tests/'
