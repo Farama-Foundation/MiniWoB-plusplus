@@ -197,12 +197,17 @@ class SeleniumInstance(Thread):
 
         try:
             self.driver = webdriver.Chrome(options=options)
+            print("Driver created with default chrome")
         except SessionNotCreatedException:
             # Attempt to find chrome & chromium binary location
             options.binary_location = (
-                shutil.which("google-chrome") or shutil.which("chromium-browser") or ""
+                shutil.which("google-chrome")
+                or shutil.which("chromium")
+                or shutil.which("chromium-browser")
+                or ""
             )
             self.driver = webdriver.Chrome(options=options)
+            print("Driver created with chromium")
         self.driver.implicitly_wait(5)
         if self.headless:
             self.driver.get(self.url)
