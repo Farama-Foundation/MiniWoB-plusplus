@@ -13,7 +13,7 @@ from typing import Any
 
 import numpy as np
 from selenium import webdriver
-from selenium.common.exceptions import SessionNotCreatedException, TimeoutException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -195,19 +195,13 @@ class SeleniumInstance(Thread):
         else:
             options.add_argument("app=" + self.url)
 
-        try:
-            self.driver = webdriver.Chrome(options=options)
-            print("Driver created with default chrome")
-        except SessionNotCreatedException:
-            # Attempt to find chrome & chromium binary location
-            options.binary_location = (
-                shutil.which("google-chrome")
-                or shutil.which("chromium")
-                or shutil.which("chromium-browser")
-                or ""
-            )
-            self.driver = webdriver.Chrome(options=options)
-            print("Driver created with chromium")
+        options.binary_location = (
+            shutil.which("google-chrome")
+            or shutil.which("chromium-browser")
+            or shutil.which("chromium")
+            or ""
+        )
+        self.driver = webdriver.Chrome(options=options)
         self.driver.implicitly_wait(5)
         if self.headless:
             self.driver.get(self.url)

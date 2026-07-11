@@ -27,8 +27,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y chromium-browser chromium-chromedriver
-          which chromium
-          which chromium-browser
       - name: Install Chrome and ChromeDriver
         if: runner.os == 'macOS'
         run: |
