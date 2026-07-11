@@ -15,54 +15,38 @@ on:
     types: [published]
 
 jobs:
-  build-wheels:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-        - os: ubuntu-latest
-          python: 310
-          platform: manylinux_x86_64
-        - os: ubuntu-latest
-          python: 311
-          platform: manylinux_x86_64
-        - os: ubuntu-latest
-          python: 312
-          platform: manylinux_x86_64
-        - os: ubuntu-latest
-          python: 313
-          platform: manylinux_x86_64
-        - os: ubuntu-latest
-          python: 314
-          platform: manylinux_x86_64
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '3.12'
     - name: Install dependencies
       run: python -m pip install --upgrade pip setuptools build
-    - name: Build sdist and wheels
+    - name: Build distribution packages
       run: python -m build
-    - name: Store wheels
+    - name: Store distribution packages
       uses: actions/upload-artifact@v4
       with:
-        path: dist
+        name: python-package-distributions
+        path: dist/
 
   publish:
     runs-on: ubuntu-latest
-    needs:
-    - build-wheels
+    needs: build
     if: github.event_name == 'release' && github.event.action == 'published'
+    permissions:
+      id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/p/miniwob
     steps:
     - name: Download dists
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
-        name: artifact
+        name: python-package-distributions
         path: dist
-    - name: Publish
+    - name: Publish distribution packages to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
