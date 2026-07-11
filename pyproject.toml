@@ -37,6 +37,7 @@ dynamic = ["version"]
 testing = [
     "pytest>=7.0.0",
     "pytest-timeout>=2.1.0",
+    "pytest-xdist",
 ]
 
 [project.urls]
