@@ -22,15 +22,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Chromium and ChromeDriver
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser chromium-chromedriver
-      - name: Install Chrome and ChromeDriver
-        if: runner.os == 'macOS'
-        run: |
-          brew reinstall --cask google-chrome chromedriver
+      - name: Install Chrome and matching ChromeDriver
+        uses: browser-actions/setup-chrome@v2
+        with:
+          install-dependencies: true
+          install-chromedriver: true
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip

@@ -195,15 +195,6 @@ class SeleniumInstance(Thread):
             options.add_argument("no-sandbox")
         else:
             options.add_argument("app=" + self.url)
-
-        if sys.platform == "linux":
-            options.binary_location = (
-                shutil.which("google-chrome")
-                or shutil.which("chromium-browser")
-                or shutil.which("chromium")
-                or ""
-            )
-            raise Exception(f"Test: {options.binary_location=}")
         self.driver = webdriver.Chrome(options=options)
         self.driver.implicitly_wait(5)
         if self.headless:
