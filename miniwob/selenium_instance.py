@@ -1,5 +1,4 @@
-"""Low-level interface with ChromDriver via Selenium."""
-
+"""Low-level interface with ChromeDriver via Selenium."""
 import json
 import logging
 import pathlib
