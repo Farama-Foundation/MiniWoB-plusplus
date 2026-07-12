@@ -196,13 +196,13 @@ class SeleniumInstance(Thread):
         else:
             options.add_argument("app=" + self.url)
 
-        options.binary_location = (
-            shutil.which("google-chrome")
-            or shutil.which("chromium-browser")
-            or shutil.which("chromium")
-            or ""
-        )
         if sys.platform == "linux":
+            options.binary_location = (
+                shutil.which("google-chrome")
+                or shutil.which("chromium-browser")
+                or shutil.which("chromium")
+                or ""
+            )
             raise Exception(f"Test: {options.binary_location=}")
         self.driver = webdriver.Chrome(options=options)
         self.driver.implicitly_wait(5)
