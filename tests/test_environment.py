@@ -106,19 +106,27 @@ class TestMiniWoBEnvironment(MiniWoBTester):
 
     def test_speed(self, env):
         """Test the processing speed for step()."""
-        obs, info = env.reset()
-        start_time = time.time()
+        env.reset()
+
         elapsed = []
-        N = 50
-        for i in range(1, N + 1):
-            print("Iteration", i, "/", N)
-            obs, reward, terminated, truncated, info = env.step(None)
-            assert terminated is False
-            elapsed.append(time.time() - start_time)
+        num_steps = 50
+
+        for i in range(1, num_steps + 1):
+            print("Iteration", i, "/", num_steps)
+
             start_time = time.time()
+            obs, reward, terminated, truncated, info = env.step(None)
+            elapsed.append(time.time() - start_time)
+
+            if terminated or truncated:
+                env.reset()
+
         mean = sum(elapsed) / len(elapsed)
+        variance = sum((duration - mean) ** 2 for duration in elapsed) / len(elapsed)
+
         print("Average time:", mean)
-        print("SD:", sum((x - mean) ** 2 for x in elapsed) / len(elapsed))
+        print("Variance:", variance)
+        assert mean < 1.0  # 1 second per step is just too absurd
 
     def test_attention(self, env):
         """Test that visualize_attention() does not crash."""
