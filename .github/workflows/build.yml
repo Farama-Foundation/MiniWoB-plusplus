@@ -30,7 +30,7 @@ jobs:
       - name: Install Chrome and ChromeDriver
         if: runner.os == 'macOS'
         run: |
-          brew install --cask google-chrome chromedriver
+          brew reinstall --cask google-chrome chromedriver
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
