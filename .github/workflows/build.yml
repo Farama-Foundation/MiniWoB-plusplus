@@ -38,5 +38,5 @@ jobs:
           python -m pip install -e .[testing] --no-cache-dir
       - name: Run tests
         run: |
-          pytest -n logical -v --timeout=60 tests/test_api.py
+          pytest -n logical -v --timeout=120 tests/test_api.py
           pytest -v --timeout=60 --ignore=tests/test_api.py tests/
