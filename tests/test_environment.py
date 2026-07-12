@@ -286,29 +286,51 @@ class TestGetOriginalReward(RewardProcessorTester):
         env.close()
 
     @pytest.mark.parametrize(
-        "numbers,check_reward",
+        "numbers,raw_reward",
         [
             # correct --> reward = 1 * time left
-            ([1, 2, 3, 4, 5], lambda r: 0.8 < r < 0.9),
+            ([1, 2, 3, 4, 5], 1.0),
             # 2 out of 5 correct --> reward = 0.4 * time left
-            ([1, 2, 5], lambda r: 0.8 * 0.4 < r < 0.9 * 0.4),
+            ([1, 2, 5], 0.4),
             # initially incorrect --> reward = -1 (no time scaling)
-            ([2], lambda r: r == -1),
+            ([2], -1.0),
         ],
     )
-    def test_get_original_reward(self, env, numbers, check_reward):
+    def test_get_original_reward(self, env, numbers, raw_reward):
         """Test the get_original_reward reward processor."""
+        before_reset = time.time()
         initial_obs, info = env.reset()
+        after_reset = time.time()
+
         time.sleep(1)
+
         for number in numbers[:-1]:
             action = self._create_click_number(env, initial_obs, number)
             obs, reward, terminated, truncated, info = env.step(action)
             assert terminated is False
             assert reward == 0
+
         action = self._create_click_number(env, initial_obs, numbers[-1])
+
+        before_final_step = time.time()
         obs, reward, terminated, truncated, info = env.step(action)
+        after_final_step = time.time()
+
         assert terminated is True
-        assert check_reward(reward)
+
+        if raw_reward < 0:
+            assert reward == raw_reward
+            return
+
+        episode_max_time = 10.0
+
+        min_elapsed = before_final_step - after_reset
+        max_elapsed = after_final_step - before_reset
+
+        min_remaining = max(0.0, 1.0 - max_elapsed / episode_max_time)
+        max_remaining = max(0.0, 1.0 - min_elapsed / episode_max_time)
+
+        assert raw_reward * min_remaining <= reward <= raw_reward * max_remaining
 
 
 class TestGetRawReward(RewardProcessorTester):
