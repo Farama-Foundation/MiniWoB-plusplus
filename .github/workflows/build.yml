@@ -22,10 +22,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Remove existing Chrome installation on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew uninstall google-chrome || true
       - name: Install Chrome and matching ChromeDriver
         uses: browser-actions/setup-chrome@v2
         with:
-          install-dependencies: true
+          chrome-version: 120
           install-chromedriver: true
       - name: Install dependencies
         run: |
