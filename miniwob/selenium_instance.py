@@ -4,6 +4,7 @@ import json
 import logging
 import pathlib
 import shutil
+import sys
 import time
 import traceback
 import urllib.parse
@@ -201,6 +202,8 @@ class SeleniumInstance(Thread):
             or shutil.which("chromium")
             or ""
         )
+        if sys.platform == "linux":
+            raise Exception(f"Test: {options.binary_location=}")
         self.driver = webdriver.Chrome(options=options)
         self.driver.implicitly_wait(5)
         if self.headless:
