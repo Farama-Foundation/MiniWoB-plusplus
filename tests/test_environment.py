@@ -243,6 +243,102 @@ class TestMiniWoBMode(MiniWoBTester):
 ################################################
 
 
+class TestFindGreatest(MiniWoBTester):
+    """Tests for the find-greatest task (regression for issue #108).
+
+    The task asks the agent to reveal the card with the greatest number and
+    submit. Only one card can be revealed at a time, so the agent must reveal
+    each card in turn to learn its value before submitting the greatest one.
+    """
+
+    ENV_NAME = "miniwob/find-greatest-v1"
+
+    def _card_divs(self, obs):
+        """Return the card <div>s as (left, top) tuples, ordered left-to-right.
+
+        The card divs have a fixed size and are always present in the
+        observation, even while hidden; the numbers themselves only appear
+        once a card is revealed.
+        """
+        cards = [
+            (element["left"].item(), element["top"].item())
+            for element in obs["dom_elements"]
+            if "card" in element["classes"].split()
+        ]
+        return sorted(cards)
+
+    def _create_click_card(self, env, card):
+        """Create an action that clicks on the given card."""
+        left, top = card
+        return env.unwrapped.create_action(
+            ActionTypes.CLICK_COORDS,
+            coords=np.array([left + 5, top + 5], dtype=np.float32),
+        )
+
+    def _revealed_value(self, obs):
+        """Return the number shown on the single currently-revealed card."""
+        for element in obs["dom_elements"]:
+            text = element["text"].strip()
+            if text.isdigit():
+                return int(text)
+        assert False, "no revealed card value found"
+
+    def _reveal_all_values(self, env, obs):
+        """Reveal each card once and return a {card: value} mapping."""
+        values = {}
+        for card in self._card_divs(obs):
+            action = self._create_click_card(env, card)
+            obs, reward, terminated, truncated, info = env.step(action)
+            assert terminated is False
+            values[card] = self._revealed_value(obs)
+        return obs, values
+
+    def test_wrong_card_gives_negative_reward(self, env):
+        """Submitting a non-greatest card must not yield a positive reward.
+
+        Regression for issue #108: the wrong-card branch previously called
+        ``core.endEpisode(0.1, true)``, so an incorrect submission produced a
+        positive terminal reward. Downstream wrappers that treat any positive
+        raw reward as success (e.g. BrowserGym) then counted a wrong answer as
+        a successful run.
+        """
+        obs, info = env.reset()
+        assert len(self._card_divs(obs)) == 3
+        obs, values = self._reveal_all_values(env, obs)
+
+        greatest_card = max(values, key=lambda card: values[card])
+        wrong_card = next(card for card in values if card != greatest_card)
+
+        action = self._create_click_card(env, wrong_card)
+        obs, reward, terminated, truncated, info = env.step(action)
+        assert terminated is False
+        action = self.create_click_button_action(env, obs, "Submit")
+        obs, reward, terminated, truncated, info = env.step(action)
+
+        assert terminated is True
+        assert reward < 0
+
+    def test_greatest_card_gives_positive_reward(self, env):
+        """Submitting the greatest card still yields a positive reward."""
+        obs, info = env.reset()
+        assert len(self._card_divs(obs)) == 3
+        obs, values = self._reveal_all_values(env, obs)
+
+        greatest_card = max(values, key=lambda card: values[card])
+
+        action = self._create_click_card(env, greatest_card)
+        obs, reward, terminated, truncated, info = env.step(action)
+        assert terminated is False
+        action = self.create_click_button_action(env, obs, "Submit")
+        obs, reward, terminated, truncated, info = env.step(action)
+
+        assert terminated is True
+        assert reward > 0
+
+
+################################################
+
+
 class TestMiniWoBFields(MiniWoBTester):
     """Tests for field extraction."""
 
