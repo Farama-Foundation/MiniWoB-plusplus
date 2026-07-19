@@ -1726,10 +1726,6 @@ class FindGreatestEnv(MiniWoBEnvironment):
     ## Utterance fields
 
     (none)
-
-    ## Additional notes
-
-    * **Partial reward:** If a card is open but it is not the greatest number, the partial reward is 0.1.
     """
 
     subdomain = "find-greatest"
