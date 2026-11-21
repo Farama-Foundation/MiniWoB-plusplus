@@ -62,7 +62,7 @@ html_theme = "celshast"
 html_title = "MiniWoB++ Documentation"
 html_baseurl = "https://miniwob.farama.org"
 html_copy_source = False
-html_favicon = "_static/img/favicon.png"
+html_favicon = "_static/img/favicon.svg"
 html_theme_options = {
     "light_logo": "img/miniwobplusplus.svg",
     "dark_logo": "img/miniwobplusplus-white.svg",
