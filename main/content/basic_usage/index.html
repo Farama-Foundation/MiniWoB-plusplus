@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Observation Space" href="../observation_space/" /><link rel="prev" title="Getting Started" href="../getting_started/" />
         <link rel="canonical" href="https://miniwob.farama.org/content/basic_usage.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.png"/><!-- Generated with Sphinx 7.4.7 and Celshast 0.0.1 -->
+    <link rel="shortcut icon" href="../../_static/favicon.svg"/><!-- Generated with Sphinx 7.4.7 and Celshast 0.0.2 -->
         <title>Basic Usage - MiniWoB++ Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/celshast.css?v=9fbfb63d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/celshast-extensions.css?v=42bfddca" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/celshast.css?v=c1bb3f29" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/celshast-extensions.css?v=88aa31df" />
     
     
 
@@ -432,23 +432,23 @@
 
 <span class="n">gymnasium</span><span class="o">.</span><span class="n">register_envs</span><span class="p">(</span><span class="n">miniwob</span><span class="p">)</span>
 
-<span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;miniwob/click-test-2-v1&#39;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;human&#39;</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">'miniwob/click-test-2-v1'</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s1">'human'</span><span class="p">)</span>
 
 <span class="c1"># Wrap the code in try-finally to ensure proper cleanup.</span>
 <span class="k">try</span><span class="p">:</span>
   <span class="c1"># Start a new episode.</span>
   <span class="n">observation</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-  <span class="k">assert</span> <span class="n">observation</span><span class="p">[</span><span class="s2">&quot;utterance&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Click button ONE.&quot;</span>
-  <span class="k">assert</span> <span class="n">observation</span><span class="p">[</span><span class="s2">&quot;fields&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">((</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="s2">&quot;ONE&quot;</span><span class="p">),)</span>
+  <span class="k">assert</span> <span class="n">observation</span><span class="p">[</span><span class="s2">"utterance"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Click button ONE."</span>
+  <span class="k">assert</span> <span class="n">observation</span><span class="p">[</span><span class="s2">"fields"</span><span class="p">]</span> <span class="o">==</span> <span class="p">((</span><span class="s2">"target"</span><span class="p">,</span> <span class="s2">"ONE"</span><span class="p">),)</span>
   <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>       <span class="c1"># Only here to let you look at the environment.</span>
   
-  <span class="c1"># Find the HTML element with text &quot;ONE&quot;.</span>
-  <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">observation</span><span class="p">[</span><span class="s2">&quot;dom_elements&quot;</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="n">element</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ONE&quot;</span><span class="p">:</span>
+  <span class="c1"># Find the HTML element with text "ONE".</span>
+  <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">observation</span><span class="p">[</span><span class="s2">"dom_elements"</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">element</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"ONE"</span><span class="p">:</span>
       <span class="k">break</span>
 
   <span class="c1"># Click on the element.</span>
-  <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">create_action</span><span class="p">(</span><span class="n">ActionTypes</span><span class="o">.</span><span class="n">CLICK_ELEMENT</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">element</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">])</span>
+  <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">create_action</span><span class="p">(</span><span class="n">ActionTypes</span><span class="o">.</span><span class="n">CLICK_ELEMENT</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">element</span><span class="p">[</span><span class="s2">"ref"</span><span class="p">])</span>
   <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 
   <span class="c1"># Check if the action was correct. </span>
@@ -471,7 +471,7 @@
 <h2>Environment Initialization<a class="headerlink" href="#environment-initialization" title="Link to this heading">¶</a></h2>
 <p>An environment can be created using
 <a class="reference external" href="https://gymnasium.farama.org/api/registry/#gymnasium.make"><code class="docutils literal notranslate"><span class="pre">gymnasium.make</span></code></a>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;miniwob/click-test-2-v1&#39;</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s1">&#39;human&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">'miniwob/click-test-2-v1'</span><span class="p">,</span> <span class="n">render_mode</span><span class="o">=</span><span class="s1">'human'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Common arguments include:</p>
@@ -519,15 +519,15 @@ return an observation, which is a <code class="docutils literal notranslate"><sp
 </ul>
 <p>For example, the <code class="docutils literal notranslate"><span class="pre">observation</span></code> from the <code class="docutils literal notranslate"><span class="pre">reset</span></code> command above is</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s1">&#39;utterance&#39;</span><span class="p">:</span> <span class="s1">&#39;Click button ONE.&#39;</span><span class="p">,</span>
-  <span class="s1">&#39;fields&#39;</span><span class="p">:</span> <span class="p">((</span><span class="s1">&#39;target&#39;</span><span class="p">,</span> <span class="s1">&#39;ONE&#39;</span><span class="p">),),</span>
-  <span class="s1">&#39;screenshot&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([[[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span>   <span class="mi">0</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">uint8</span><span class="p">),</span>
-  <span class="s1">&#39;dom_elements&#39;</span><span class="p">:</span> <span class="p">(</span>
-    <span class="p">{</span><span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;button&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;ONE&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;tag&#39;</span><span class="p">:</span> <span class="s1">&#39;button&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;TWO&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+  <span class="s1">'utterance'</span><span class="p">:</span> <span class="s1">'Click button ONE.'</span><span class="p">,</span>
+  <span class="s1">'fields'</span><span class="p">:</span> <span class="p">((</span><span class="s1">'target'</span><span class="p">,</span> <span class="s1">'ONE'</span><span class="p">),),</span>
+  <span class="s1">'screenshot'</span><span class="p">:</span> <span class="n">array</span><span class="p">([[[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span>   <span class="mi">0</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">uint8</span><span class="p">),</span>
+  <span class="s1">'dom_elements'</span><span class="p">:</span> <span class="p">(</span>
+    <span class="p">{</span><span class="s1">'ref'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'parent'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'tag'</span><span class="p">:</span> <span class="s1">'body'</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'ref'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'parent'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'tag'</span><span class="p">:</span> <span class="s1">'div'</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'ref'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'parent'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'tag'</span><span class="p">:</span> <span class="s1">'div'</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'ref'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">'parent'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'tag'</span><span class="p">:</span> <span class="s1">'button'</span><span class="p">,</span> <span class="s1">'text'</span><span class="p">:</span> <span class="s1">'ONE'</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'ref'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">'parent'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'tag'</span><span class="p">:</span> <span class="s1">'button'</span><span class="p">,</span> <span class="s1">'text'</span><span class="p">:</span> <span class="s1">'TWO'</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
   <span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
@@ -536,7 +536,7 @@ return an observation, which is a <code class="docutils literal notranslate"><sp
 </section>
 <section id="action-space">
 <h2>Action Space<a class="headerlink" href="#action-space" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">create_action</span><span class="p">(</span><span class="n">ActionTypes</span><span class="o">.</span><span class="n">CLICK_ELEMENT</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">element</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">create_action</span><span class="p">(</span><span class="n">ActionTypes</span><span class="o">.</span><span class="n">CLICK_ELEMENT</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">element</span><span class="p">[</span><span class="s2">"ref"</span><span class="p">])</span>
 <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -549,8 +549,8 @@ The action space <code class="docutils literal notranslate"><span class="pre">en
 </ul>
 <p>For example, the <code class="docutils literal notranslate"><span class="pre">action</span></code> from the <code class="docutils literal notranslate"><span class="pre">create_action</span></code> command above is</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="s1">&#39;action_type&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>     <span class="c1"># ActionTypes.CLICK_ELEMENT in the default action config.</span>
-  <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>             <span class="c1"># The button with text &#39;ONE&#39; from observation[&#39;dom_elements&#39;].</span>
+  <span class="s1">'action_type'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>     <span class="c1"># ActionTypes.CLICK_ELEMENT in the default action config.</span>
+  <span class="s1">'ref'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>             <span class="c1"># The button with text 'ONE' from observation['dom_elements'].</span>
   <span class="o">...</span>                   <span class="c1"># Other fields are ignored for CLICK_ELEMENT.</span>
 <span class="p">}</span>  
 </pre></div>
@@ -595,6 +595,7 @@ The action space <code class="docutils literal notranslate"><span class="pre">en
               <div class="copyright">
                 Copyright &#169; 2023 Farama Foundation
               </div>
+              <script defer src="../../_static/farama/copyright-year.js"></script>
               <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -723,182 +724,9 @@ The action space <code class="docutils literal notranslate"><span class="pre">en
     <script src="../../_static/documentation_options.js?v=25d39d6f"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/scripts/celshast.js?v=a788a8c6"></script>
+    <script src="../../_static/scripts/celshast.js?v=704c8ef9"></script>
     
-    <script>
-
-      const createProjectsList = (projects, displayImages) => {
-        const ulElem = Object.assign(document.createElement('ul'),
-          {
-            className:'farama-header-menu-list',
-          }
-        )
-        for (let project of projects) {
-          const liElem = document.createElement("li");
-          const aElem = Object.assign(document.createElement("a"),
-            {
-              href: project.link
-            }
-          );
-          liElem.appendChild(aElem);
-          if (displayImages) {
-            const imgElem = Object.assign(document.createElement("img"),
-              {
-                src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
-                alt: `${project.name} logo`,
-                className: "farama-black-logo-invert"
-              }
-            );
-            aElem.appendChild(imgElem);
-          }
-          aElem.appendChild(document.createTextNode(project.name));
-          ulElem.appendChild(liElem);
-        }
-        return ulElem;
-      }
-
-      // Create menu with Farama projects by using the API at farama.org/api/projects.json
-      const createCORSRequest = (method, url) => {
-        let xhr = new XMLHttpRequest();
-        xhr.responseType = 'json';
-
-        if ("withCredentials" in xhr) {
-          xhr.open(method, url, true);
-        } else if (typeof XDomainRequest != "undefined") {
-          // IE8 & IE9
-          xhr = new XDomainRequest();
-          xhr.open(method, url);
-        } else {
-          // CORS not supported.
-          xhr = null;
-        }
-        return xhr;
-      };
-
-      const url = 'https://farama.org/api/projects.json';
-      const imagesBasepath = "https://farama.org/assets/images"
-      const method = 'GET';
-      let xhr = createCORSRequest(method, url);
-
-      xhr.onload = () => {
-        const jsonResponse = xhr.response;
-        const sections = {
-          "Core Projects": [],
-          "Foundation": [
-            {
-              name: "About",
-              link: "https://farama.org/about"
-            },
-            {
-              name: "Standards",
-              link: "https://farama.org/project_standards",
-            },
-            {
-              name: "Donate",
-              link: "https://farama.org/donations"
-            }
-          ],
-          "Mature Projects": {
-            "Documentation": [],
-          },
-          "Incubating Projects": {
-            "Documentation": [],
-            "Repositories": [],
-          }
-        }
-
-        // Categorize projects
-        Object.keys(jsonResponse).forEach(key => {
-          projectJson = jsonResponse[key];
-          if (projectJson.website !== null) {
-            projectJson.link = projectJson.website;
-          } else {
-            projectJson.link = projectJson.github;
-          }
-          if (projectJson.type === "core") {
-            sections["Core Projects"].push(projectJson)
-          } else if (projectJson.type == "mature") {
-            if (projectJson.website !== null) {
-              sections["Mature Projects"]["Documentation"].push(projectJson)
-            }
-          } else {
-            if (projectJson.website !== null) {
-              sections["Incubating Projects"]["Documentation"].push(projectJson)
-            } else {
-              sections["Incubating Projects"]["Repositories"].push(projectJson)
-            }
-          }
-        })
-
-        const menuContainer = document.querySelector(".farama-header-menu__body");
-
-        const stackedColumnElem = Object.assign(
-          document.createElement('div'), {
-            style: 'display: flex; flex-direction: column;'
-          }
-        );
-        const stackedKeys = new Set(["Core Projects", "Foundation"]);
-
-        Object.keys(sections).forEach((key, i) => {
-          const sectionElem = Object.assign(
-            document.createElement('div'), {
-              className:'farama-header-menu__section',
-            }
-          )
-          sectionElem.appendChild(Object.assign(document.createElement('span'),
-            {
-              className:'farama-header-menu__section-title' ,
-              innerText: key
-            }
-          ))
-          // is not a list
-          if (sections[key].constructor !== Array) {
-            const subSections = sections[key];
-            const subSectionContainerElem = Object.assign(
-                document.createElement('div'), {
-                  className:'farama-header-menu__subsections-container',
-                  style: 'display: flex'
-                }
-            )
-            Object.keys(subSections).forEach((subKey, i) => {
-              const subSectionElem = Object.assign(
-                document.createElement('div'), {
-                  className:'farama-header-menu__subsection',
-                }
-              )
-              subSectionElem.appendChild(Object.assign(document.createElement('span'),
-                {
-                  className:'farama-header-menu__subsection-title' ,
-                  innerText: subKey
-                }
-              ))
-              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
-              subSectionElem.appendChild(ulElem);
-              subSectionContainerElem.appendChild(subSectionElem);
-            })
-            sectionElem.appendChild(subSectionContainerElem);
-          } else {
-            const projects = sections[key];
-            const ulElem = createProjectsList(projects, true);
-            sectionElem.appendChild(ulElem);
-          }
-          if (stackedKeys.has(key)) {
-            if (!stackedColumnElem.parentNode) {
-              menuContainer.appendChild(stackedColumnElem);
-            }
-            stackedColumnElem.appendChild(sectionElem);
-          } else {
-            menuContainer.appendChild(sectionElem);
-          }
-        });
-      }
-
-      xhr.onerror = function() {
-        console.error("Unable to load projects");
-      };
-
-      xhr.send();
-    </script>
+    <script defer src="https://farama.org/assets/docs/shared.js"></script>
 
     
     <script>
